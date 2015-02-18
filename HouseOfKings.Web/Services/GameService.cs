@@ -18,11 +18,7 @@ namespace HouseOfKings.Web.Services
         {
             get
             {
-                if (this.ruleRepository == null)
-                {
-                    this.ruleRepository = HttpContext.Current.GetOwinContext().Get<RuleRepository>();
-                }
-                return this.ruleRepository;
+                return this.ruleRepository ?? HttpContext.Current.GetOwinContext().Get<RuleRepository>();
             }
             set
             {

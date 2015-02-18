@@ -14,9 +14,9 @@ namespace HouseOfKings.Web.Hubs
         [Inject]
         public GameService GameService { get; set; }
 
-        public void PickCard(string groupName)
+        public async Task PickCard(string groupName)
         {
-            this.GameService.PickCard(this.GetUsername(), groupName);
+            await this.GameService.PickCard(this.GetUsername(), groupName);
         }
 
         private string GetUsername()
