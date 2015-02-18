@@ -1,0 +1,11 @@
+﻿@model HouseOfKings.Web.ViewModels.GameViewModel
+
+@using (Html.BeginForm("SetTempUsername", "Account", FormMethod.Post, new { id = "temp-username" }))
+{
+    @Html.ValidationSummary()
+    <div class="form-group">
+        @Html.LabelFor(m => m.TempUsername, new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.TempUsername, new { @class = "form-control" })
+    </div>
+    <button type="submit" class="btn btn-primary">Continue</button>
+}

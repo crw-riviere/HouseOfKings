@@ -168,9 +168,11 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\NinjectSignalRDependencyResolver.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="DAL\HouseOfKingsContext.cs" />
@@ -181,6 +183,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Hubs\GameHub.cs" />
+    <Compile Include="Migrations\201502181528026_InitialCreate.cs" />
+    <Compile Include="Migrations\201502181528026_InitialCreate.Designer.cs">
+      <DependentUpon>201502181528026_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\CardModels.cs" />
     <Compile Include="Models\GameGroupModels.cs" />
@@ -361,6 +368,10 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Game\Index.cshtml" />
+    <Content Include="Views\Account\_TempUsername.cshtml" />
+    <Content Include="Views\Account\_TempUsernameSuccessful.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Card.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -370,6 +381,9 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201502181528026_InitialCreate.resx">
+      <DependentUpon>201502181528026_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

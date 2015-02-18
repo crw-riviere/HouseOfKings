@@ -12,17 +12,21 @@ namespace HouseOfKings.Web.Services
 {
     public class GameService
     {
-        private RuleRepository ruleRepos;
+        private RuleRepository ruleRepository;
 
         public RuleRepository RuleRepository
         {
             get
             {
-                return this.ruleRepos ?? HttpContext.Current.GetOwinContext().Get<RuleRepository>();
+                if (this.ruleRepository == null)
+                {
+                    this.ruleRepository = HttpContext.Current.GetOwinContext().Get<RuleRepository>();
+                }
+                return this.ruleRepository;
             }
             set
             {
-                this.ruleRepos = value;
+                this.ruleRepository = value;
             }
         }
 

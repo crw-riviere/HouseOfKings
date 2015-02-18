@@ -1,8 +1,10 @@
 ﻿using HouseOfKings.Web.Models;
+using HouseOfKings.Web.Properties;
 using HouseOfKings.Web.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -407,6 +409,43 @@ namespace HouseOfKings.Web.Controllers
         public ActionResult ExternalLoginFailure()
         {
             return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public JsonResult IsUsernameDefined()
+        {
+            bool usernameDefined = false;
+            var cookie = this.GetUsernameCookie();
+            if (cookie != null && !string.IsNullOrEmpty(cookie[Resources.CookieUsername]))
+            {
+                usernameDefined = true;
+            }
+
+            return Json(usernameDefined, JsonRequestBehavior.AllowGet);
+        }
+
+        private HttpCookie GetUsernameCookie()
+        {
+            return HttpContext.Request.Cookies.Get(Resources.CookieName);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public PartialViewResult SetTempUsername(GameViewModel gameVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var cookie = this.GetUsernameCookie() ?? new HttpCookie(Resources.CookieName);
+                cookie.Values[Resources.CookieUsername] = gameVM.TempUsername;
+                cookie.Expires = DateTime.UtcNow.AddDays(1);
+                cookie.Secure = false;
+                cookie.HttpOnly = true;
+                HttpContext.Response.SetCookie(cookie);
+                return PartialView("~/Views/Account/_TempUsernameSuccessful.cshtml");
+            }
+
+            return PartialView("~/Views/Account/_TempUsername.cshtml", gameVM);
         }
 
         protected override void Dispose(bool disposing)
