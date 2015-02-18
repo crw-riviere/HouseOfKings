@@ -51,6 +51,6 @@ namespace HouseOfKings.Web.Models
     {
         public string Username { get; set; }
 
-        public string ConnectionId { get; set; }
+        public string Id { get; set; }
     }
 }

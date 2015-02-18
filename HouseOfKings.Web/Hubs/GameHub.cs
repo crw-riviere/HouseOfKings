@@ -20,7 +20,7 @@ namespace HouseOfKings.Web.Hubs
         public async Task JoinGroup(string groupName)
         {
             await Groups.Add(Context.ConnectionId, groupName);
-            this.GameService.JoinGroup(Context.ConnectionId, groupName);
+            this.GameService.JoinGroup(groupName);
         }
 
         //public override Task OnDisconnected(bool stopCalled)

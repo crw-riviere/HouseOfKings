@@ -5,8 +5,8 @@ using HouseOfKings.Web.ViewModels;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.SignalR.Hubs;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -35,11 +35,41 @@ namespace HouseOfKings.Web.Services
             }
         }
 
-        public void JoinGroup(string connectionId, string groupName)
+        public RuleRepository RuleRepository
+        {
+            get
+            {
+                return this.ruleRepository ?? HttpContext.Current.GetOwinContext().Get<RuleRepository>();
+            }
+            set
+            {
+                this.ruleRepository = value;
+            }
+        }
+
+        public static Player CurrentPlayer
+        {
+            get
+            {
+                var cookie = HttpContext.Current.Request.Cookies.Get(Resources.CookieName);
+                if (cookie == null)
+                {
+                    throw new CookieException();
+                }
+
+                return new Player { Id = cookie[Resources.CookiePlayerId], Username = cookie[Resources.CookieUsername] };
+            }
+        }
+
+        public void JoinGroup(string groupName)
         {
             var gameGroup = this.GetGameGroup(groupName);
-            gameGroup.Players.Add(new Player() { ConnectionId = connectionId, Username = connectionId });
-            Clients.Group(groupName).setAudit(this.GetUsername() + " joined the game");
+
+            if (!gameGroup.Players.Any(x => x.Id == CurrentPlayer.Id))
+            {
+                gameGroup.Players.Add(CurrentPlayer);
+                Clients.Group(groupName).setAudit(CurrentPlayer.Username + " joined the game");
+            }
         }
 
         //public void LeaveGroup(string connectionId)
@@ -54,25 +84,6 @@ namespace HouseOfKings.Web.Services
             return this.GameGroups.GetOrAdd(groupName, new GameGroup() { Name = groupName });
         }
 
-        private Deck GetDeck(string groupName)
-        {
-            var gameGroup = this.GetGameGroup(groupName);
-
-            return gameGroup.Deck;
-        }
-
-        public RuleRepository RuleRepository
-        {
-            get
-            {
-                return this.ruleRepository ?? HttpContext.Current.GetOwinContext().Get<RuleRepository>();
-            }
-            set
-            {
-                this.ruleRepository = value;
-            }
-        }
-
         public GameService()
         {
         }
@@ -84,26 +95,15 @@ namespace HouseOfKings.Web.Services
 
         private IHubConnectionContext<dynamic> Clients { get; set; }
 
-        private string GetUsername()
-        {
-            var cookie = HttpContext.Current.Request.Cookies.Get(Resources.CookieName);
-            if (cookie != null && !string.IsNullOrEmpty(cookie[Resources.CookieUsername]))
-            {
-                return cookie[Resources.CookieUsername];
-            }
-
-            return null;
-        }
-
-        private Player GetNextTurn(string connectionId, List<Player> players)
-        {
-            int nextIndex = players.IndexOf(players.FirstOrDefault(x => x.ConnectionId.Equals(connectionId)));
-            if (nextIndex >= players.Count)
-            {
-                nextIndex = 0;
-            }
-            return players[nextIndex];
-        }
+        //private Player GetNextTurn(string connectionId, List<Player> players)
+        //{
+        //    int nextIndex = players.IndexOf(players.FirstOrDefault(x => x.ConnectionId.Equals(connectionId)));
+        //    if (nextIndex >= players.Count)
+        //    {
+        //        nextIndex = 0;
+        //    }
+        //    return players[nextIndex];
+        //}
 
         public async Task PickCard(string connectionId, string groupName)
         {
@@ -123,9 +123,9 @@ namespace HouseOfKings.Web.Services
 
                 this.BroadcastCard(groupName, cardVM);
 
-                var nextPlayer = this.GetNextTurn(connectionId, gameGroup.Players);
+                //var nextPlayer = this.GetNextTurn(connectionId, gameGroup.Players);
 
-                this.Clients.Client(nextPlayer.ConnectionId).setTurn();
+                //this.Clients.Client(nextPlayer.ConnectionId).setTurn();
             }
             else
             {
