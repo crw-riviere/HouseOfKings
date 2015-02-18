@@ -1,8 +1,11 @@
-﻿using HouseOfKings.Web.ViewModels;
+﻿using HouseOfKings.Web.Attributes;
+using HouseOfKings.Web.ViewModels;
 using System.Web.Mvc;
 
 namespace HouseOfKings.Web.Controllers
 {
+    [AllowAnonymous]
+    [PlayerAuthorize]
     public class GameController : Controller
     {
         // GET: Game

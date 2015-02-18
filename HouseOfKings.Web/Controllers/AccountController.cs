@@ -411,41 +411,42 @@ namespace HouseOfKings.Web.Controllers
             return View();
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        public JsonResult IsUsernameDefined()
-        {
-            bool usernameDefined = false;
-            var cookie = this.GetUsernameCookie();
-            if (cookie != null && !string.IsNullOrEmpty(cookie[Resources.CookieUsername]))
-            {
-                usernameDefined = true;
-            }
-
-            return Json(usernameDefined, JsonRequestBehavior.AllowGet);
-        }
-
         private HttpCookie GetUsernameCookie()
         {
             return HttpContext.Request.Cookies.Get(Resources.CookieName);
         }
 
+        [ActionName("Username")]
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult SetTempUsername(string returnUrl)
+        {
+            return View("TempUsername", new TempUsernameViewModel() { ReturnUrl = returnUrl });
+        }
+
+        [ActionName("Username")]
         [HttpPost]
         [AllowAnonymous]
-        public PartialViewResult SetTempUsername(GameViewModel gameVM)
+        [ValidateAntiForgeryToken]
+        public ActionResult SetTempUsername(TempUsernameViewModel usernameVM)
         {
             if (ModelState.IsValid)
             {
                 var cookie = this.GetUsernameCookie() ?? new HttpCookie(Resources.CookieName);
-                cookie.Values[Resources.CookieUsername] = gameVM.TempUsername;
+                cookie.Values[Resources.CookiePlayerId] = Guid.NewGuid().ToString();
+                cookie.Values[Resources.CookieUsername] = usernameVM.TempUsername;
                 cookie.Expires = DateTime.UtcNow.AddDays(1);
                 cookie.Secure = false;
                 cookie.HttpOnly = true;
                 HttpContext.Response.SetCookie(cookie);
-                return PartialView("~/Views/Account/_TempUsernameSuccessful.cshtml");
+
+                if (!string.IsNullOrEmpty(usernameVM.ReturnUrl))
+                {
+                    return RedirectPermanent(usernameVM.ReturnUrl);
+                }
             }
 
-            return PartialView("~/Views/Account/_TempUsername.cshtml", gameVM);
+            return View("TempUsername", usernameVM);
         }
 
         protected override void Dispose(bool disposing)

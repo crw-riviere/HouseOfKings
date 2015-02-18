@@ -70,6 +70,15 @@ namespace HouseOfKings.Web.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PlayerId.
+        /// </summary>
+        internal static string CookiePlayerId {
+            get {
+                return ResourceManager.GetString("CookiePlayerId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Username.
         /// </summary>
         internal static string CookieUsername {

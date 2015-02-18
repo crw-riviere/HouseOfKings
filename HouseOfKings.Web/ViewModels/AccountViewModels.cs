@@ -113,4 +113,13 @@ namespace HouseOfKings.Web.ViewModels
         [Display(Name = "Email")]
         public string Email { get; set; }
     }
+
+    public class TempUsernameViewModel
+    {
+        public string ReturnUrl { get; set; }
+
+        [Required]
+        [StringLength(10)]
+        public string TempUsername { get; set; }
+    }
 }

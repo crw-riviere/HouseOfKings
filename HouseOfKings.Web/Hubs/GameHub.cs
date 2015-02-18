@@ -1,10 +1,8 @@
-﻿using HouseOfKings.Web.Properties;
-using HouseOfKings.Web.Services;
+﻿using HouseOfKings.Web.Services;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Ninject;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace HouseOfKings.Web.Hubs
 {
@@ -16,24 +14,19 @@ namespace HouseOfKings.Web.Hubs
 
         public async Task PickCard(string groupName)
         {
-            await this.GameService.PickCard(this.GetUsername(), groupName);
-        }
-
-        private string GetUsername()
-        {
-            var cookie = HttpContext.Current.Request.Cookies.Get(Resources.CookieName);
-            if (cookie != null && !string.IsNullOrEmpty(cookie[Resources.CookieUsername]))
-            {
-                return cookie[Resources.CookieUsername];
-            }
-
-            return Context.ConnectionId;
+            await this.GameService.PickCard(Context.ConnectionId, groupName);
         }
 
         public async Task JoinGroup(string groupName)
         {
             await Groups.Add(Context.ConnectionId, groupName);
-            Clients.Group(groupName).setAudit(this.GetUsername() + " joined the game");
+            this.GameService.JoinGroup(Context.ConnectionId, groupName);
         }
+
+        //public override Task OnDisconnected(bool stopCalled)
+        //{
+        //    return base.OnDisconnected(stopCalled);
+        //    this.GameService.LeaveGroup(Context.ConnectionId);
+        //}
     }
 }

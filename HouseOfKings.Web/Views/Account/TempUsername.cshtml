@@ -1,9 +1,11 @@
-﻿@model HouseOfKings.Web.ViewModels.GameViewModel
+﻿@model HouseOfKings.Web.ViewModels.TempUsernameViewModel
 
-@using (Html.BeginForm("SetTempUsername", "Account", FormMethod.Post, new { id = "temp-username" }))
+@using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     @Html.ValidationSummary()
     <div class="form-group">
+        @Html.HiddenFor(m => m.ReturnUrl)
         @Html.LabelFor(m => m.TempUsername, new { @class = "control-label" })
         @Html.TextBoxFor(m => m.TempUsername, new { @class = "form-control" })
     </div>

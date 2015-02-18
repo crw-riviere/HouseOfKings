@@ -120,6 +120,9 @@
   <data name="CookieName" xml:space="preserve">
     <value>HouseOfKings</value>
   </data>
+  <data name="CookiePlayerId" xml:space="preserve">
+    <value>PlayerId</value>
+  </data>
   <data name="CookieUsername" xml:space="preserve">
     <value>Username</value>
   </data>

@@ -171,6 +171,7 @@
     <Compile Include="App_Start\NinjectSignalRDependencyResolver.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Attributes\PlayerAuthorizeAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -369,12 +370,12 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Game\Index.cshtml" />
-    <Content Include="Views\Account\_TempUsername.cshtml" />
-    <Content Include="Views\Account\_TempUsernameSuccessful.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\Card.cshtml" />
+    <Content Include="Views\Account\TempUsername.cshtml" />
+    <Content Include="Views\Shared\_Card.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Shared\DisplayTemplates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -1,14 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HouseOfKings.Web.Models
 {
     public class GameGroup
     {
+        private Deck deck;
+        private List<Player> players;
+
         [Key]
         public string Name { get; set; }
-
-        private Deck deck;
 
         [NotMapped]
         public Deck Deck
@@ -26,5 +28,29 @@ namespace HouseOfKings.Web.Models
                 this.deck = value;
             }
         }
+
+        [NotMapped]
+        public List<Player> Players
+        {
+            get
+            {
+                if (this.players == null)
+                {
+                    this.players = new List<Player>();
+                }
+                return this.players;
+            }
+            set
+            {
+                this.players = value;
+            }
+        }
+    }
+
+    public class Player
+    {
+        public string Username { get; set; }
+
+        public string ConnectionId { get; set; }
     }
 }
