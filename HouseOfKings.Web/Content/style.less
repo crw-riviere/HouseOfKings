@@ -1,0 +1,130 @@
+﻿@import "bootstrap/bootstrap.less";
+@import "fontawesome/font-awesome.less";
+
+@import "font.less";
+@import "variables.less";
+
+.body-content {
+    padding-top: 60px;
+}
+
+#audit {
+    display: inline-block;
+    width: 100%;
+    background-color: @brand-primary;
+    padding: 5px 10px;
+    color: white;
+}
+
+.suit {
+    color: black;
+    display: inherit;
+    font-family: @font-family-sans-serif;
+
+    &.suit-club {
+        &:after {
+            content: '♣';
+            display: inherit;
+            margin: 0 2px;
+        }
+    }
+
+    &.suit-spade {
+        &:after {
+            content: '♠';
+            display: inherit;
+            margin: 0 2px;
+        }
+    }
+
+    &.suit-heart {
+        color: red;
+
+        &:after {
+            content: '♥';
+            display: inherit;
+            margin: 0 2px;
+        }
+    }
+
+    &.suit-diamond {
+        color: red;
+
+        &:after {
+            content: '♦';
+            display: inherit;
+            margin: 0 2px;
+        }
+    }
+}
+
+.card {
+    position: relative;
+    height: 180px;
+    width: 130px;
+    border: 1px solid black;
+    border-radius: 5px;
+
+    &.card-red {
+        color: red;
+    }
+
+    .card-info {
+        margin: 8px 5px;
+        display: block;
+        font-size: 22px;
+
+        &:last-child {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            -ms-transform: rotate(180eg); /* IE 9 */
+            -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+            transform: rotate(180deg);
+        }
+
+        .card-number {
+            display: block;
+        }
+
+        .card-suit {
+            display: block;
+        }
+    }
+}
+
+.stats {
+    color: red;
+    font-weight: bold;
+
+    > .stats-label {
+        font-size: small;
+        color: black;
+        display: block;
+        text-transform: uppercase;
+    }
+}
+
+.cntrl {
+    position: fixed;
+    left: 5px;
+    right: 5px;
+
+    &.cntrl-header {
+        top: 55px;
+        height: 30px;
+    }
+
+    &.cntrl-content {
+        left: 0;
+        right: 0;
+        top: 100px;
+        bottom: 55px;
+        overflow: auto;
+    }
+
+    &.cntrl-footer {
+        bottom: 5px;
+        height: 45px;
+    }
+}
