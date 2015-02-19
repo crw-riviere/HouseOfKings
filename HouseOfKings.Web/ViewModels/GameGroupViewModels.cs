@@ -13,6 +13,9 @@ namespace HouseOfKings.Web.ViewModels
 
     public class GameGroupInfoViewModel
     {
+        [JsonProperty("turn")]
+        public TurnViewModel CurrentTurn { get; set; }
+
         [JsonProperty("playerNames")]
         public List<string> PlayerNames { get; set; }
     }

@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HouseOfKings.Web.ViewModels
 {
-    public class CardViewModel
+    public class TurnViewModel
     {
-        public CardViewModel()
+        public TurnViewModel()
         {
             this.Rule = new RuleViewModel();
         }
@@ -20,6 +20,15 @@ namespace HouseOfKings.Web.ViewModels
         [JsonProperty("player")]
         public string Player { get; set; }
 
+        [JsonProperty("card")]
+        public CardViewModel Card { get; set; }
+
+        [JsonProperty("rule")]
+        public RuleViewModel Rule { get; set; }
+    }
+
+    public class CardViewModel
+    {
         [JsonProperty("number")]
         [Range(1, 13)]
         public int Number { get; set; }
@@ -27,9 +36,6 @@ namespace HouseOfKings.Web.ViewModels
         [JsonProperty("suit")]
         [Required]
         public Suit Suit { get; set; }
-
-        [JsonProperty("rule")]
-        public RuleViewModel Rule { get; set; }
     }
 
     public class RuleViewModel

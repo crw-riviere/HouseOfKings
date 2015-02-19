@@ -8340,9 +8340,8 @@ button.close {
 #audit {
   display: inline-block;
   width: 100%;
-  background-color: #337ab7;
   padding: 5px 10px;
-  color: white;
+  text-align: center;
 }
 .suit {
   color: black;
@@ -8409,12 +8408,14 @@ button.close {
 .group-circle {
   position: relative;
   height: 350px;
-  width: 100%;
-  border: 1px solid black;
+  width: 350px;
+  border: 1px solid #efefef;
+  border-radius: 50%;
 }
 .player {
   position: absolute;
   display: block;
+  text-align: center;
 }
 .player:before {
   font-family: FontAwesome;
@@ -8424,6 +8425,7 @@ button.close {
   display: inherit;
 }
 .stats {
+  text-align: center;
   color: red;
   font-weight: bold;
 }
@@ -8435,16 +8437,14 @@ button.close {
 }
 .cntrl {
   position: fixed;
-  left: 5px;
-  right: 5px;
+  left: 0;
+  right: 0;
 }
 .cntrl.cntrl-header {
   top: 55px;
   height: 30px;
 }
 .cntrl.cntrl-content {
-  left: 0;
-  right: 0;
   top: 100px;
   bottom: 55px;
   overflow: auto;

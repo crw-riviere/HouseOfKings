@@ -11,9 +11,8 @@
 #audit {
     display: inline-block;
     width: 100%;
-    background-color: @brand-primary;
     padding: 5px 10px;
-    color: white;
+    text-align:center;
 }
 
 .suit {
@@ -96,13 +95,15 @@
 .group-circle {
     position: relative;
     height: 350px;
-    width: 100%;
-    border: 1px solid black;
+    width: 350px;
+    border: 1px solid #efefef;
+    border-radius:50%;
 }
 
 .player {
     position: absolute;
     display:block;
+    text-align:center;
     &:before {
         font-family: FontAwesome;
         content: "\f007";
@@ -113,6 +114,7 @@
 }
 
 .stats {
+text-align:center;
     color: red;
     font-weight: bold;
 
@@ -126,8 +128,8 @@
 
 .cntrl {
     position: fixed;
-    left: 5px;
-    right: 5px;
+    left: 0;
+    right: 0;
 
     &.cntrl-header {
         top: 55px;
@@ -135,8 +137,6 @@
     }
 
     &.cntrl-content {
-        left: 0;
-        right: 0;
         top: 100px;
         bottom: 55px;
         overflow: auto;

@@ -5,7 +5,7 @@
     var groupName = null;
     function init() {
         groupName = $('#group-name').val();
-        game.server.joinGroup(groupName).done(function (groupInfo) {
+        game.server.joinGroup(groupName).done(function () {
             $(document).on('click', '.action-pick-card', function () {
                 $btn.loadingButton({ text: 'Picking Card...' });
                 game.server.pickCard(groupName).done(function () {
@@ -19,20 +19,20 @@
         groupInfo.playerNames.forEach(function (name) {
             addPlayer(name);
         });
-        distributePlayers();
+        drawPlayers();
+        drawTurn(groupInfo.turn);
     }
 
-    function distributePlayers() {
-        var radius = 130;
+    function drawPlayers() {
+        var radius = 120;
         var players = $('.player');
         width = $groupCircle.width(), height = $groupCircle.height(),
-        angle = 0, step = (2 * Math.PI) / players.length;
+        angle = 0,
+        step = (2 * Math.PI) / players.length;
         players.each(function () {
             var x = Math.round(width / 2 + radius * Math.cos(angle) - $(this).width() / 2);
             var y = Math.round(height / 2 + radius * Math.sin(angle) - $(this).height() / 2);
-            if (window.console) {
-                console.log($(this).text(), x, y);
-            }
+            
             $(this).css({
                 left: x + 'px',
                 top: y + 'px'
@@ -90,9 +90,9 @@
         return number;
     }
 
-    function updateStats(card) {
-        $('#card-count').html(card.cardCount);
-        $('#king-count').html(card.kingCount);
+    function updateStats(turn) {
+        $('#card-count').html(turn.cardCount);
+        $('#king-count').html(turn.kingCount);
     }
 
     function updateCard(card) {
@@ -104,8 +104,8 @@
     }
 
     function addPlayer(name) {
-        game.client.setAudit(name+ ' joined the game');
-        $groupCircle.append('<div class="player">'+name+'</div>');
+        game.client.setAudit(name + ' joined the game');
+        $groupCircle.append('<div class="player">' + name + '</div>');
     }
 
     game.client.drawGroup = function (groupInfo) {
@@ -114,35 +114,52 @@
 
     game.client.addPlayer = function (playerUsername) {
         addPlayer(playerUsername)
-        distributePlayers();
+        drawPlayers();
     }
 
     game.client.setTurn = function () {
         $btn.loadingButton({ reset: true });
     }
 
-    game.client.showPickedCard = function (card) {
-        game.client.setAudit(card.player + ' picked ' + '<span class="suit"></span>');
-        game.client.setMessage(card.player + ' picked ' + '<div style="display:inline;" class="suit"></div><br/><br/><strong>' + card.rule.title + '</strong><br/><br/>' + card.rule.desc);
+    function drawTurn(turn) {
+        updateStats(turn);
 
-        updateStats(card);
-        updateCard(card);
+        var card = turn.card;
+
+        if (card) {
+            setAudit(turn.player + ' picked ' + '<span class="suit"></span>');
+            //setMessage(turn.player + ' picked ' + '<div style="display:inline;" class="suit"></div><br/><br/><strong>' + card.rule.title + '</strong><br/><br/>' + card.rule.desc);
+
+            updateCard(card);
+        }
     }
 
-    game.client.showGameOver = function (card) {
-        game.client.setAudit(card.player + ' picked ' + '<span class="suit"></span>');
-        game.client.setMessage(card.player + ' picked ' + '<div style="display:inline;" class="suit"></div><br/><br/><strong>Game Over</strong><br/><br/>');
-
-        updateStats(card);
-        updateCard(card);
+    game.client.drawTurn = function (turn) {
+        drawTurn(turn);
     }
 
-    game.client.setAudit = function (message) {
+    //game.client.showGameOver = function (card) {
+    //    setAudit(card.player + ' picked ' + '<span class="suit"></span>');
+    //    setMessage(card.player + ' picked ' + '<div style="display:inline;" class="suit"></div><br/><br/><strong>Game Over</strong><br/><br/>');
+
+    //    updateStats(card);
+    //    updateCard(card);
+    //}
+
+    function setAudit(message) {
         $('#audit').html(message);
     }
 
-    game.client.setMessage = function (message) {
+    game.client.setAudit = function (message) {
+        setAudit(message);
+    }
+
+    function setMessage(message) {
         $('#message').html(message);
+    }
+
+    game.client.setMessage = function (message) {
+        setMessage(message);
     }
 
     // Start the connection

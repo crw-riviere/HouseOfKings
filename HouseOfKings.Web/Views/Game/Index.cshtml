@@ -12,7 +12,10 @@
 }
 
 <div class="cntrl cntrl-header">
+    <div class="container-fluid">
     <p id="audit"></p>
+
+    </div>
 </div>
 
 <div class="cntrl cntrl-content">
@@ -24,24 +27,26 @@
                             @{Html.RenderPartial("_Card");}
                         </div>
                         <div class="col-xs-6">
-                            <p class="stats">
-                                <span id="card-count" class=""></span>
-                                <span class="stats-label">
-                                    cards remaining
-                                </span>
-                            </p>
-                            <p class="stats">
-                                <span id="king-count" class=""></span>
-                                <span class="stats-label">
-                                    kings remaining
-                                </span>
-                            </p>
+                            
                         </div>
                     </div>*@
                 <input type="hidden" id="group-name" value="@Model.GroupName" />
                 <div class="group-circle">
                 </div>
             </div>
+           
+            <p class="col-xs-6 stats">
+                <span id="card-count" class=""></span>
+                <span class="stats-label">
+                    cards remaining
+                </span>
+            </p>
+            <p class="col-xs-6 stats">
+                <span id="king-count" class=""></span>
+                <span class="stats-label">
+                    kings remaining
+                </span>
+            </p>              
             <div class="col-xs-12">
 
                 <br />
@@ -53,5 +58,8 @@
 </div>
 
 <div class="cntrl cntrl-footer">
+    <div class="container-fluid">
     <button type="button" class="btn btn-primary btn-lg btn-block action-pick-card">Pick Card</button>
+
+    </div>
 </div>

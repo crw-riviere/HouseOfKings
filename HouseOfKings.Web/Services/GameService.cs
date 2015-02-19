@@ -81,7 +81,7 @@ namespace HouseOfKings.Web.Services
 
             List<string> playerNames = gameGroup.Players.Select(x => x.Username).ToList();
 
-            this.Clients.Client(connectionId).drawGroup(new GameGroupInfoViewModel() { PlayerNames = playerNames });
+            this.Clients.Client(connectionId).drawGroup(new GameGroupInfoViewModel() { PlayerNames = playerNames, CurrentTurn = this.GetTurnInfo(groupName) });
         }
 
         //public void LeaveGroup(string connectionId)
@@ -115,7 +115,28 @@ namespace HouseOfKings.Web.Services
             {
                 nextIndex = 0;
             }
+
             return players[nextIndex];
+        }
+
+        private TurnViewModel GetTurnInfo(string groupName)
+        {
+            var gameGroup = this.GetGameGroup(groupName);
+
+            if (gameGroup != null)
+            {
+                var deck = gameGroup.Deck;
+                var card = deck.CurrentCard;
+
+                return new TurnViewModel()
+                            {
+                                Card = card != null ? new CardViewModel() { Number = card.Number, Suit = card.Suit } : null,
+                                CardCount = deck.CardCount,
+                                KingCount = deck.KingCount
+                            };
+            }
+
+            return null;
         }
 
         public async Task PickCard(string groupName)
@@ -128,13 +149,19 @@ namespace HouseOfKings.Web.Services
             {
                 var getRuleTask = this.RuleRepository.GetAsync(card.Number);
 
-                var cardVM = new CardViewModel() { Player = CurrentPlayer.Username, Number = card.Number, Suit = card.Suit, CardCount = deck.CardCount, KingCount = deck.KingCount };
+                var turnVM = new TurnViewModel()
+                {
+                    Player = CurrentPlayer.Username,
+                    Card = new CardViewModel() { Number = card.Number, Suit = card.Suit },
+                    CardCount = deck.CardCount,
+                    KingCount = deck.KingCount
+                };
 
                 var rule = await getRuleTask;
 
-                cardVM.Rule.Title = rule.Title;
+                turnVM.Rule.Title = rule.Title;
 
-                this.BroadcastCard(groupName, cardVM);
+                this.BroadcastTurn(groupName, turnVM);
 
                 var nextPlayer = GetNextTurn(CurrentPlayer.Id, gameGroup.Players);
 
@@ -146,9 +173,9 @@ namespace HouseOfKings.Web.Services
             }
         }
 
-        private void BroadcastCard(string groupName, CardViewModel cardVM)
+        private void BroadcastTurn(string groupName, TurnViewModel turnVM)
         {
-            Clients.Group(groupName).showPickedCard(cardVM);
+            Clients.Group(groupName).drawTurn(turnVM);
         }
     }
 }
