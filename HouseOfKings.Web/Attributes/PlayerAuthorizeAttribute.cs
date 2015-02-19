@@ -12,7 +12,7 @@ namespace HouseOfKings.Web.Attributes
 
             var cookie = filterContext.HttpContext.Request.Cookies[Resources.CookieName];
 
-            if (cookie == null || string.IsNullOrEmpty(cookie[Resources.CookieUsername]))
+            if (cookie == null || string.IsNullOrEmpty(cookie[Resources.CookiePlayerId]) || string.IsNullOrEmpty(cookie[Resources.CookieUsername]))
             {
                 filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Account", action = "Username", returnUrl = filterContext.HttpContext.Request.Url }));
             }

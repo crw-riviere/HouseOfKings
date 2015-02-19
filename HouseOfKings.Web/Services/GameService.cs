@@ -5,6 +5,7 @@ using HouseOfKings.Web.ViewModels;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.SignalR.Hubs;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -61,14 +62,22 @@ namespace HouseOfKings.Web.Services
             }
         }
 
-        public void JoinGroup(string groupName)
+        public void JoinGroup(string connectionId, string groupName)
         {
             var gameGroup = this.GetGameGroup(groupName);
 
-            if (!gameGroup.Players.Any(x => x.Id == CurrentPlayer.Id))
+            var player = gameGroup.Players.FirstOrDefault(x => x.Id.Equals(CurrentPlayer.Id));
+
+            if (player == null)
             {
-                gameGroup.Players.Add(CurrentPlayer);
+                player = CurrentPlayer;
+                player.ConnectionId = connectionId;
+                gameGroup.Players.Add(player);
                 Clients.Group(groupName).setAudit(CurrentPlayer.Username + " joined the game");
+            }
+            else
+            {
+                player.ConnectionId = connectionId;
             }
         }
 
@@ -95,17 +104,18 @@ namespace HouseOfKings.Web.Services
 
         private IHubConnectionContext<dynamic> Clients { get; set; }
 
-        //private Player GetNextTurn(string connectionId, List<Player> players)
-        //{
-        //    int nextIndex = players.IndexOf(players.FirstOrDefault(x => x.ConnectionId.Equals(connectionId)));
-        //    if (nextIndex >= players.Count)
-        //    {
-        //        nextIndex = 0;
-        //    }
-        //    return players[nextIndex];
-        //}
+        private static Player GetNextTurn(string currentPlayerId, List<Player> players)
+        {
+            var currentTurnPlayer = players.FirstOrDefault(x => x.Id.Equals(currentPlayerId));
+            int nextIndex = players.IndexOf(currentTurnPlayer) + 1;
+            if (nextIndex >= players.Count)
+            {
+                nextIndex = 0;
+            }
+            return players[nextIndex];
+        }
 
-        public async Task PickCard(string connectionId, string groupName)
+        public async Task PickCard(string groupName)
         {
             var gameGroup = this.GetGameGroup(groupName);
             var deck = gameGroup.Deck;
@@ -115,7 +125,7 @@ namespace HouseOfKings.Web.Services
             {
                 var getRuleTask = this.RuleRepository.GetAsync(card.Number);
 
-                var cardVM = new CardViewModel() { Player = connectionId, Number = card.Number, Suit = card.Suit, CardCount = deck.CardCount, KingCount = deck.KingCount };
+                var cardVM = new CardViewModel() { Player = CurrentPlayer.Username, Number = card.Number, Suit = card.Suit, CardCount = deck.CardCount, KingCount = deck.KingCount };
 
                 var rule = await getRuleTask;
 
@@ -123,9 +133,9 @@ namespace HouseOfKings.Web.Services
 
                 this.BroadcastCard(groupName, cardVM);
 
-                //var nextPlayer = this.GetNextTurn(connectionId, gameGroup.Players);
+                var nextPlayer = GetNextTurn(CurrentPlayer.Id, gameGroup.Players);
 
-                //this.Clients.Client(nextPlayer.ConnectionId).setTurn();
+                this.Clients.Client(nextPlayer.ConnectionId).setTurn();
             }
             else
             {
