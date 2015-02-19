@@ -34,6 +34,8 @@ namespace HouseOfKings.Web.Models
             set { this.cards = value; }
         }
 
+        public Card CurrentCard { get; set; }
+
         public static IEnumerable<Card> BuildDeck()
         {
             foreach (Suit suit in Enum.GetValues(typeof(Suit)))
@@ -69,7 +71,8 @@ namespace HouseOfKings.Web.Models
             {
                 var card = this.Cards.ElementAt(rnd.Next(cardCount));
                 this.Cards.Remove(card);
-                return card;
+                this.CurrentCard = card;
+                return this.CurrentCard;
             }
 
             return null;
