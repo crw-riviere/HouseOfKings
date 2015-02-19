@@ -1,6 +1,7 @@
 ﻿$(function () {
-    var game = $.connection.game; // the generated client-side hub proxy
     var $btn = $('.action-pick-card');
+    $btn.loadingButton({ text: 'Waiting for my turn...' });
+    var game = $.connection.game; // the generated client-side hub proxy
     var $groupCircle = $('.group-circle');
     var groupName = null;
     function init() {
@@ -16,8 +17,8 @@
     }
 
     function drawGroup(groupInfo) {
-        groupInfo.playerNames.forEach(function (name) {
-            addPlayer(name);
+        groupInfo.players.forEach(function (player) {
+            addPlayer(player);
         });
         drawPlayers();
         drawTurn(groupInfo.turn);
@@ -32,7 +33,7 @@
         players.each(function () {
             var x = Math.round(width / 2 + radius * Math.cos(angle) - $(this).width() / 2);
             var y = Math.round(height / 2 + radius * Math.sin(angle) - $(this).height() / 2);
-            
+
             $(this).css({
                 left: x + 'px',
                 top: y + 'px'
@@ -103,18 +104,23 @@
         console.log(card);
     }
 
-    function addPlayer(name) {
-        game.client.setAudit(name + ' joined the game');
-        $groupCircle.append('<div class="player">' + name + '</div>');
+    function addPlayer(player) {
+        game.client.setAudit(player.name + ' joined the game');
+        $groupCircle.append('<div class="player" data-player-id="' + player.id + '">' + player.name + '</div>');
     }
 
     game.client.drawGroup = function (groupInfo) {
         drawGroup(groupInfo);
     }
 
-    game.client.addPlayer = function (playerUsername) {
-        addPlayer(playerUsername)
+    game.client.addPlayer = function (player) {
+        addPlayer(player)
         drawPlayers();
+    }
+
+    game.client.removePlayer = function (player) {
+        setAudit(player.name + ' left the group');
+        $groupCircle.find("[data-player-id='" + player.id + "']").remove();
     }
 
     game.client.setTurn = function () {
@@ -128,7 +134,7 @@
 
         if (card) {
             setAudit(turn.player + ' picked ' + '<span class="suit"></span>');
-            //setMessage(turn.player + ' picked ' + '<div style="display:inline;" class="suit"></div><br/><br/><strong>' + card.rule.title + '</strong><br/><br/>' + card.rule.desc);
+            setMessage(turn.player + ' picked&emsp;' + '<div style="display:inline;" class="suit"></div><strong>&emsp;' + turn.rule.title + '</strong>');
 
             updateCard(card);
         }

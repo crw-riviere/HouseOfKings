@@ -23,10 +23,10 @@ namespace HouseOfKings.Web.Hubs
             this.GameService.JoinGroup(Context.ConnectionId, groupName);
         }
 
-        //public override Task OnDisconnected(bool stopCalled)
-        //{
-        //    return base.OnDisconnected(stopCalled);
-        //    this.GameService.LeaveGroup(Context.ConnectionId);
-        //}
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            this.GameService.LeaveGroup(Context.ConnectionId);
+            return base.OnDisconnected(stopCalled);
+        }
     }
 }

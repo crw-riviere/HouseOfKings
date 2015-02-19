@@ -16,7 +16,16 @@ namespace HouseOfKings.Web.ViewModels
         [JsonProperty("turn")]
         public TurnViewModel CurrentTurn { get; set; }
 
-        [JsonProperty("playerNames")]
-        public List<string> PlayerNames { get; set; }
+        [JsonProperty("players")]
+        public List<PlayerViewModel> Players { get; set; }
+    }
+
+    public class PlayerViewModel
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        [JsonProperty("name")]
+        public string Username { get; set; }
     }
 }

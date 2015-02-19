@@ -73,15 +73,31 @@ namespace HouseOfKings.Web.Services
                 player = CurrentPlayer;
                 player.ConnectionId = connectionId;
                 gameGroup.Players.Add(player);
+                this.Clients.Group(groupName, connectionId).addPlayer(new PlayerViewModel() { Id = CurrentPlayer.Id, Username = CurrentPlayer.Username });
             }
             else
             {
                 player.ConnectionId = connectionId;
             }
 
-            List<string> playerNames = gameGroup.Players.Select(x => x.Username).ToList();
+            List<PlayerViewModel> players = (from p in gameGroup.Players
+                                             select new PlayerViewModel() { Id = p.Id, Username = p.Username }).ToList();
 
-            this.Clients.Client(connectionId).drawGroup(new GameGroupInfoViewModel() { PlayerNames = playerNames, CurrentTurn = this.GetTurnInfo(groupName) });
+            this.Clients.Client(connectionId).drawGroup(new GameGroupInfoViewModel() { Players = players, CurrentTurn = this.GetTurnInfo(groupName) });
+        }
+
+        public void LeaveGroup(string connectionId)
+        {
+            GameGroup gameGroup = this.GameGroups.Select(x => x.Value).FirstOrDefault(x => x.Players.Any(p => p.ConnectionId.Equals(connectionId)));
+            if (gameGroup != null)
+            {
+                Player player = gameGroup.Players.FirstOrDefault(x => x.ConnectionId.Equals(connectionId));
+                if (player != null)
+                {
+                    gameGroup.Players.Remove(player);
+                    this.Clients.Group(gameGroup.Name).removePlayer(new PlayerViewModel() { Id = player.Id, Username = player.Username });
+                }
+            }
         }
 
         //public void LeaveGroup(string connectionId)

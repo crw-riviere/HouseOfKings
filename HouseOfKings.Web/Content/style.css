@@ -8345,6 +8345,9 @@ button.close {
   bottom: 0;
   right: 0;
 }
+.horizontal-center {
+  margin: 0 auto;
+}
 #audit {
   display: inline-block;
   width: 100%;
