@@ -8337,6 +8337,14 @@ button.close {
 .body-content {
   padding-top: 60px;
 }
+.absolute-center {
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
 #audit {
   display: inline-block;
   width: 100%;
@@ -8375,9 +8383,9 @@ button.close {
   margin: 0 2px;
 }
 .card {
-  position: relative;
-  height: 180px;
-  width: 130px;
+  position: absolute;
+  height: 100px;
+  width: 70px;
   border: 1px solid black;
   border-radius: 5px;
 }
@@ -8387,7 +8395,7 @@ button.close {
 .card .card-info {
   margin: 8px 5px;
   display: block;
-  font-size: 22px;
+  font-size: 14px;
 }
 .card .card-info:last-child {
   position: absolute;
@@ -8411,6 +8419,17 @@ button.close {
   width: 350px;
   border: 1px solid #efefef;
   border-radius: 50%;
+  -moz-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+.group-circle > div,
+.group-circle span {
+  -moz-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  transform: rotate(-90deg);
 }
 .player {
   position: absolute;
