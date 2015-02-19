@@ -5,14 +5,21 @@
     var groupName = null;
     function init() {
         groupName = $('#group-name').val();
-        game.server.joinGroup(groupName);
-
-        $(document).on('click', '.action-pick-card', function () {
-            $btn.loadingButton({ text: 'Picking Card...' });
-            game.server.pickCard(groupName).done(function () {
-                $btn.text('Waiting for my turn...');
+        game.server.joinGroup(groupName).done(function (groupInfo) {
+            $(document).on('click', '.action-pick-card', function () {
+                $btn.loadingButton({ text: 'Picking Card...' });
+                game.server.pickCard(groupName).done(function () {
+                    $btn.text('Waiting for my turn...');
+                });
             });
         });
+    }
+
+    function drawGroup(groupInfo) {
+        groupInfo.playerNames.forEach(function (name) {
+            addPlayer(name);
+        });
+        distributePlayers();
     }
 
     function distributePlayers() {
@@ -96,9 +103,17 @@
         console.log(card);
     }
 
+    function addPlayer(name) {
+        game.client.setAudit(name+ ' joined the game');
+        $groupCircle.append('<div class="player">'+name+'</div>');
+    }
+
+    game.client.drawGroup = function (groupInfo) {
+        drawGroup(groupInfo);
+    }
+
     game.client.addPlayer = function (playerUsername) {
-        game.client.setAudit(playerUsername + ' joined the game');
-        $groupCircle.append('<div class="player"></div>');
+        addPlayer(playerUsername)
         distributePlayers();
     }
 

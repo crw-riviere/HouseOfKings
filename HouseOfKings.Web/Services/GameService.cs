@@ -78,7 +78,10 @@ namespace HouseOfKings.Web.Services
             {
                 player.ConnectionId = connectionId;
             }
-            Clients.Group(groupName).addPlayer(CurrentPlayer.Username);
+
+            List<string> playerNames = gameGroup.Players.Select(x => x.Username).ToList();
+
+            this.Clients.Client(connectionId).drawGroup(new GameGroupInfoViewModel() { PlayerNames = playerNames });
         }
 
         //public void LeaveGroup(string connectionId)

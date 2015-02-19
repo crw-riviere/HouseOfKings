@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace HouseOfKings.Web.ViewModels
 {
@@ -7,5 +9,11 @@ namespace HouseOfKings.Web.ViewModels
         [Required]
         [StringLength(50)]
         public string Name { get; set; }
+    }
+
+    public class GameGroupInfoViewModel
+    {
+        [JsonProperty("playerNames")]
+        public List<string> PlayerNames { get; set; }
     }
 }
