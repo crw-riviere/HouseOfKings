@@ -1,27 +1,26 @@
 ﻿@model HouseOfKings.Web.ViewModels.GameViewModel
 
-    @{
-        ViewBag.Title = "Game";
-    }
+@{
+    ViewBag.Title = "Game";
+}
 
-    @section scripts{
-        <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
-        <script src="~/signalr/hubs"></script>
-        <script src="~/Scripts/hok.game.js"></script>
+@section scripts{
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/hok.game.js"></script>
 
-    }
+}
 
-    <div class="cntrl cntrl-header">
-        <p id="audit"></p>
-    </div>
+<div class="cntrl cntrl-header">
+    <p id="audit"></p>
+</div>
 
-    <div class="cntrl cntrl-content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="row">
+<div class="cntrl cntrl-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                @*<div class="row">
                         <div class="col-xs-6">
-                            <input type="hidden" id="group-name" value="@Model.GroupName" />
                             @{Html.RenderPartial("_Card");}
                         </div>
                         <div class="col-xs-6">
@@ -38,18 +37,21 @@
                                 </span>
                             </p>
                         </div>
-                    </div>
+                    </div>*@
+                <input type="hidden" id="group-name" value="@Model.GroupName" />
+                <div class="group-circle">
                 </div>
-                <div class="col-xs-12">
+            </div>
+            <div class="col-xs-12">
 
-                    <br />
-                    <hr />
-                    <p id="message" class="text-center"></p>
-                </div>
+                <br />
+                <hr />
+                <p id="message" class="text-center"></p>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="cntrl cntrl-footer">
-        <button type="button" class="btn btn-primary btn-lg btn-block action-pick-card">Pick Card</button>
-    </div>
+<div class="cntrl cntrl-footer">
+    <button type="button" class="btn btn-primary btn-lg btn-block action-pick-card">Pick Card</button>
+</div>

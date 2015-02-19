@@ -8406,6 +8406,26 @@ button.close {
 .card .card-info .card-suit {
   display: block;
 }
+.group-circle {
+  position: relative;
+  height: 350px;
+  width: 100%;
+  border: 1px solid black;
+}
+.player {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  background-color: red;
+}
+.player:before {
+  font-family: FontAwesome;
+  content: "\f007";
+  font-size: 50px;
+  position: relative;
+  top: -20px;
+  left: -10px;
+}
 .stats {
   color: red;
   font-weight: bold;

@@ -73,12 +73,12 @@ namespace HouseOfKings.Web.Services
                 player = CurrentPlayer;
                 player.ConnectionId = connectionId;
                 gameGroup.Players.Add(player);
-                Clients.Group(groupName).setAudit(CurrentPlayer.Username + " joined the game");
             }
             else
             {
                 player.ConnectionId = connectionId;
             }
+            Clients.Group(groupName).addPlayer(CurrentPlayer.Username);
         }
 
         //public void LeaveGroup(string connectionId)

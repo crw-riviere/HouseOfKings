@@ -13,5 +13,10 @@ namespace HouseOfKings.Web.Controllers
         {
             return View(new GameViewModel() { GroupName = groupName });
         }
+
+        public ActionResult Test()
+        {
+            return View();
+        }
     }
 }
