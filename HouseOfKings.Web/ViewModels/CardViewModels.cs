@@ -11,6 +11,9 @@ namespace HouseOfKings.Web.ViewModels
             this.Rule = new RuleViewModel();
         }
 
+        [JsonProperty("fin")]
+        public bool GameOver { get; set; }
+
         [JsonProperty("cardCount")]
         public int CardCount { get; set; }
 

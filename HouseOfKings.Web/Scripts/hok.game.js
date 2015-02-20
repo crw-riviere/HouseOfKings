@@ -1,14 +1,17 @@
 ﻿$(function () {
-    var $btn = $('.action-pick-card');
-    $btn.loadingButton({ text: 'Waiting for my turn...' });
     var game = $.connection.game; // the generated client-side hub proxy
-    var $groupCircle = $('.group-circle');
-    var groupName = null;
+    $groupCircle = $('.group-circle'),
+    groupName = null,
+    $btn = $('.action-pick-card');
+
+    $btn.loadingButton({ text: 'Waiting for my turn...' });
+
     function init() {
         groupName = $('#group-name').val();
         game.server.joinGroup(groupName).done(function () {
+            setAudit('Joined ' + groupName);
             $(document).on('click', '.action-pick-card', function () {
-                $btn.loadingButton({ text: 'Picking Card...' });
+                $btn.text('Picking Card...');
                 game.server.pickCard(groupName).done(function () {
                     $btn.text('Waiting for my turn...');
                 });
@@ -127,13 +130,13 @@
         $btn.loadingButton({ reset: true });
     }
 
-    function gameover(player) {
-        $('#gameover-message').html(player.name + ' picked the last king.<br/><strong>Game Over</strong>');
+    function setGameover(player) {
+        $('#gameover-message').html(player.name + ' picked the last King<br/><br/><strong>Game Over</strong>');
         $('#gameover-modal').modal({ keyboard: false, backdrop: 'static' });
     }
 
-    game.client.gameover = function (player) {
-        gameover(player);
+    game.client.setGameover = function (player) {
+        setGameover(player);
     }
 
     function drawTurn(turn) {
@@ -147,19 +150,15 @@
 
             updateCard(card);
         }
+
+        if (turn.fin) {
+            setGameover(turn.player);
+        }
     }
 
     game.client.drawTurn = function (turn) {
         drawTurn(turn);
     }
-
-    //game.client.showGameOver = function (card) {
-    //    setAudit(card.player + ' picked ' + '<span class="suit"></span>');
-    //    setMessage(card.player + ' picked ' + '<div style="display:inline;" class="suit"></div><br/><br/><strong>Game Over</strong><br/><br/>');
-
-    //    updateStats(card);
-    //    updateCard(card);
-    //}
 
     function setAudit(message) {
         $('#audit').html(message);
@@ -176,6 +175,21 @@
     game.client.setMessage = function (message) {
         setMessage(message);
     }
+
+    $.connection.hub.connectionSlow(function () {
+        setAudit('Poverty connection to server...');
+    });
+
+    $.connection.hub.reconnected(function () {
+        setAudit('Disconnected from server')
+    });
+
+    $.connection.hub.disconnected(function () {
+        setAudit('Attempting to reconnect to server...');
+        setTimeout(function () {
+            $.connection.hub.start();
+        }, 5000);
+    });
 
     // Start the connection
     $.connection.hub.start().done(init);

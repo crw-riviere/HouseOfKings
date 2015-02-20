@@ -108,14 +108,27 @@ namespace HouseOfKings.Web.Services
                     }
 
                     gameGroup.Players.Remove(player);
+
                     this.Clients.Group(gameGroup.Name).removePlayer(new PlayerViewModel() { Id = player.Id, Username = player.Username });
+
+                    if (gameGroup.Players.Count == 0)
+                    {
+                        this.GameGroups.TryRemove(gameGroup.Name, out gameGroup);
+                        gameGroup = null;
+                    }
                 }
             }
         }
 
         private GameGroup GetGameGroup(string groupName)
         {
-            return this.GameGroups.GetOrAdd(groupName, new GameGroup() { Name = groupName });
+            var gameGroup = this.GameGroups.GetOrAdd(groupName, new GameGroup() { Name = groupName });
+            if (gameGroup.Deck.KingCount == 0)
+            {
+                gameGroup.Deck.Cards = Deck.BuildDeck().ToList();
+            }
+
+            return gameGroup;
         }
 
         public GameService()
@@ -191,7 +204,8 @@ namespace HouseOfKings.Web.Services
                         CurrentPlayer = Mapper.Map<Player, PlayerViewModel>(CurrentPlayer),
                         Card = new CardViewModel() { Number = card.Number, Suit = card.Suit },
                         CardCount = deck.CardCount,
-                        KingCount = deck.KingCount
+                        KingCount = deck.KingCount,
+                        GameOver = deck.KingCount == 0
                     };
 
                     var rule = await getRuleTask;
@@ -208,7 +222,7 @@ namespace HouseOfKings.Web.Services
                 }
                 else
                 {
-                    this.Clients.Group(groupName).setAudit("No more cards left.");
+                    this.SetGameover(CurrentPlayer, groupName);
                 }
             }
             catch (Exception ex)
@@ -222,6 +236,12 @@ namespace HouseOfKings.Web.Services
             gameGroup.CurrentTurn = player;
 
             this.Clients.Client(player.ConnectionId).setTurn();
+        }
+
+        private void SetGameover(Player player, string groupName)
+        {
+            var playerVM = Mapper.Map<Player, PlayerViewModel>(player);
+            this.Clients.Group(groupName).setGameover(playerVM);
         }
 
         private void BroadcastTurn(string groupName, TurnViewModel turnVM)
