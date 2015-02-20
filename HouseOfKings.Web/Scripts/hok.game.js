@@ -122,7 +122,7 @@
 
     function addPlayer(player) {
         game.client.setAudit(player.name + ' joined the game');
-        $groupCircle.append('<div class="player" data-player-id="' + player.id + '">' + player.name + '</div>');
+        $groupCircle.append('<div class="player" data-player-id="' + player.id + '" data-name="' + player.name + '"></div>');
     }
 
     game.client.drawGroup = function (groupInfo) {

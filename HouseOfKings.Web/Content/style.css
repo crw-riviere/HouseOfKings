@@ -8421,7 +8421,7 @@ button.close {
   margin-top: 15px;
 }
 .group-circle {
-  margin: 5px 0;
+  margin: 8px 0;
   box-shadow: 0 0 10px 1px black;
   position: relative;
   border: 2px solid #efefef;
@@ -8451,17 +8451,20 @@ button.close {
   transform: rotate(-90deg);
 }
 .player {
-  position: absolute;
-  display: block;
   text-align: center;
+  position: absolute;
 }
 .player:before {
+  position: relative;
+  display: block;
+  font-size: 50px;
   font-family: FontAwesome;
   content: "\f007";
-  font-size: 50px;
+}
+.player:after {
   position: relative;
-  display: inherit;
-  top: 10px;
+  display: block;
+  content: attr(data-name);
 }
 .stats {
   text-align: center;

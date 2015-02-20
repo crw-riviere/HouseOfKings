@@ -26,14 +26,15 @@
     width: 100%;
     padding: 5px 10px;
     text-align: center;
-    margin-top:5px;
+    margin-top: 5px;
 }
 
 .suit {
     color: black;
     display: inherit;
     font-family: @font-family-sans-serif;
-    letter-spacing:3px;
+    letter-spacing: 3px;
+
     &.suit-club {
         &:after {
             content: '♣';
@@ -103,10 +104,10 @@
     }
 }
 
-.rule-panel{
-border: 1px solid #efefef;
-padding: 10px 5px;
-margin-top: 15px;
+.rule-panel {
+    border: 1px solid #efefef;
+    padding: 10px 5px;
+    margin-top: 15px;
 }
 
 .group-circle {
@@ -120,7 +121,7 @@ margin-top: 15px;
         width: 350px;
     }
 
-    margin:5px 0;
+    margin: 8px 0;
     box-shadow: 0 0 10px 1px black;
     position: relative;
     border: 2px solid #efefef;
@@ -136,22 +137,24 @@ margin-top: 15px;
         -ms-transform: rotate(-90deg);
         transform: rotate(-90deg);
     }
-
-    
 }
 
 .player {
-    position: absolute;
-    display: block;
     text-align: center;
+    position: absolute;
 
-    &:before {
-        font-family: FontAwesome;
-        content: "\f007";
-        font-size: 50px;
-        position: relative;
-        display: inherit;
-        top:10px;
+    &:before{
+    position:relative;
+        display: block;
+    font-size: 50px;
+    font-family: FontAwesome;
+    content: "\f007";
+    }
+
+    &:after {
+    position:relative;
+        display: block;
+        content: attr(data-name);
     }
 }
 

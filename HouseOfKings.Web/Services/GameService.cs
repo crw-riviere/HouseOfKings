@@ -192,6 +192,12 @@ namespace HouseOfKings.Web.Services
             try
             {
                 var gameGroup = this.GetGameGroup(groupName);
+
+                if (!gameGroup.CurrentTurn.Id.Equals(CurrentPlayer.Id))
+                {
+                    throw new Exception("Unauthorized Turn");
+                }
+
                 var deck = gameGroup.Deck;
                 var card = deck.PickRandomCard();
 

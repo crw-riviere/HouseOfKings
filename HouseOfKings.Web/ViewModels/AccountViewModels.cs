@@ -120,6 +120,7 @@ namespace HouseOfKings.Web.ViewModels
 
         [Required]
         [StringLength(10)]
+        [Display(Name = "Username")]
         public string TempUsername { get; set; }
     }
 }
