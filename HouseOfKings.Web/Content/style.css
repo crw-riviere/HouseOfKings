@@ -8427,8 +8427,7 @@ button.close {
   -ms-transform: rotate(90deg);
   transform: rotate(90deg);
 }
-.group-circle > div,
-.group-circle span {
+.group-circle > * {
   -moz-transform: rotate(-90deg);
   -o-transform: rotate(-90deg);
   -ms-transform: rotate(-90deg);

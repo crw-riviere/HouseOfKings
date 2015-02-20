@@ -1,9 +1,11 @@
-﻿using HouseOfKings.Web.DAL.Repository;
+﻿using AutoMapper;
+using HouseOfKings.Web.DAL.Repository;
 using HouseOfKings.Web.Models;
 using HouseOfKings.Web.Properties;
 using HouseOfKings.Web.ViewModels;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.SignalR.Hubs;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,7 +64,7 @@ namespace HouseOfKings.Web.Services
             }
         }
 
-        public void JoinGroup(string connectionId, string groupName)
+        public async Task JoinGroup(string connectionId, string groupName)
         {
             var gameGroup = this.GetGameGroup(groupName);
 
@@ -83,7 +85,12 @@ namespace HouseOfKings.Web.Services
             List<PlayerViewModel> players = (from p in gameGroup.Players
                                              select new PlayerViewModel() { Id = p.Id, Username = p.Username }).ToList();
 
-            this.Clients.Client(connectionId).drawGroup(new GameGroupInfoViewModel() { Players = players, CurrentTurn = this.GetTurnInfo(groupName) });
+            this.Clients.Client(connectionId).drawGroup(new GameGroupInfoViewModel() { Players = players, CurrentTurn = await this.GetTurnInfo(groupName) });
+
+            if (gameGroup.Players.Count <= 1)
+            {
+                this.SetTurn(player, gameGroup);
+            }
         }
 
         public void LeaveGroup(string connectionId)
@@ -94,18 +101,17 @@ namespace HouseOfKings.Web.Services
                 Player player = gameGroup.Players.FirstOrDefault(x => x.ConnectionId.Equals(connectionId));
                 if (player != null)
                 {
+                    if (gameGroup.CurrentTurn.Equals(player))
+                    {
+                        var nextPlayer = GetNextTurn(player.Id, gameGroup.Players);
+                        this.SetTurn(nextPlayer, gameGroup);
+                    }
+
                     gameGroup.Players.Remove(player);
                     this.Clients.Group(gameGroup.Name).removePlayer(new PlayerViewModel() { Id = player.Id, Username = player.Username });
                 }
             }
         }
-
-        //public void LeaveGroup(string connectionId)
-        //{
-        //    var gameGroup = this.GetGameGroup(groupName);
-        //    gameGroup.Players.Add(new Player() { ConnectionId = connectionId, Username = connectionId });
-        //    Clients.Group(groupName).setAudit(this.GetUsername() + " joined the game");
-        //}
 
         private GameGroup GetGameGroup(string groupName)
         {
@@ -135,7 +141,7 @@ namespace HouseOfKings.Web.Services
             return players[nextIndex];
         }
 
-        private TurnViewModel GetTurnInfo(string groupName)
+        private async Task<TurnViewModel> GetTurnInfo(string groupName)
         {
             var gameGroup = this.GetGameGroup(groupName);
 
@@ -144,12 +150,25 @@ namespace HouseOfKings.Web.Services
                 var deck = gameGroup.Deck;
                 var card = deck.CurrentCard;
 
-                return new TurnViewModel()
+                var turnVM = new TurnViewModel()
                             {
-                                Card = card != null ? new CardViewModel() { Number = card.Number, Suit = card.Suit } : null,
+                                CurrentPlayer = AutoMapper.Mapper.Map<Player, PlayerViewModel>(gameGroup.CurrentTurn),
                                 CardCount = deck.CardCount,
                                 KingCount = deck.KingCount
                             };
+
+                if (card != null)
+                {
+                    var getRuleTask = this.RuleRepository.GetAsync(card.Number);
+
+                    turnVM.Card = new CardViewModel() { Number = card.Number, Suit = card.Suit };
+
+                    var rule = await getRuleTask;
+
+                    turnVM.Rule = new RuleViewModel() { Title = rule.Title };
+                }
+
+                return turnVM;
             }
 
             return null;
@@ -157,36 +176,52 @@ namespace HouseOfKings.Web.Services
 
         public async Task PickCard(string groupName)
         {
-            var gameGroup = this.GetGameGroup(groupName);
-            var deck = gameGroup.Deck;
-            var card = deck.PickRandomCard();
-
-            if (card != null)
+            try
             {
-                var getRuleTask = this.RuleRepository.GetAsync(card.Number);
+                var gameGroup = this.GetGameGroup(groupName);
+                var deck = gameGroup.Deck;
+                var card = deck.PickRandomCard();
 
-                var turnVM = new TurnViewModel()
+                if (card != null)
                 {
-                    Player = CurrentPlayer.Username,
-                    Card = new CardViewModel() { Number = card.Number, Suit = card.Suit },
-                    CardCount = deck.CardCount,
-                    KingCount = deck.KingCount
-                };
+                    var getRuleTask = this.RuleRepository.GetAsync(card.Number);
 
-                var rule = await getRuleTask;
+                    var turnVM = new TurnViewModel()
+                    {
+                        CurrentPlayer = Mapper.Map<Player, PlayerViewModel>(CurrentPlayer),
+                        Card = new CardViewModel() { Number = card.Number, Suit = card.Suit },
+                        CardCount = deck.CardCount,
+                        KingCount = deck.KingCount
+                    };
 
-                turnVM.Rule.Title = rule.Title;
+                    var rule = await getRuleTask;
 
-                this.BroadcastTurn(groupName, turnVM);
+                    turnVM.Rule.Title = rule.Title;
 
-                var nextPlayer = GetNextTurn(CurrentPlayer.Id, gameGroup.Players);
+                    this.BroadcastTurn(groupName, turnVM);
 
-                this.Clients.Client(nextPlayer.ConnectionId).setTurn();
+                    var nextPlayer = GetNextTurn(CurrentPlayer.Id, gameGroup.Players);
+
+                    gameGroup.CurrentTurn = nextPlayer;
+
+                    this.SetTurn(nextPlayer, gameGroup);
+                }
+                else
+                {
+                    this.Clients.Group(groupName).setAudit("No more cards left.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                this.Clients.Group(groupName).setAudit("No more cards left.");
+                var i = 0;
             }
+        }
+
+        private void SetTurn(Player player, GameGroup gameGroup)
+        {
+            gameGroup.CurrentTurn = player;
+
+            this.Clients.Client(player.ConnectionId).setTurn();
         }
 
         private void BroadcastTurn(string groupName, TurnViewModel turnVM)

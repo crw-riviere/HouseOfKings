@@ -18,7 +18,7 @@ namespace HouseOfKings.Web.ViewModels
         public int KingCount { get; set; }
 
         [JsonProperty("player")]
-        public string Player { get; set; }
+        public PlayerViewModel CurrentPlayer { get; set; }
 
         [JsonProperty("card")]
         public CardViewModel Card { get; set; }

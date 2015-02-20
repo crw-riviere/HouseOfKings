@@ -133,8 +133,8 @@
         var card = turn.card;
 
         if (card) {
-            setAudit(turn.player + ' picked ' + '<span class="suit"></span>');
-            setMessage(turn.player + ' picked&emsp;' + '<div style="display:inline;" class="suit"></div><strong>&emsp;' + turn.rule.title + '</strong>');
+            setAudit(turn.player.name + ' picked ' + '<span class="suit"></span>');
+            setMessage(turn.player.name + ' picked&emsp;' + '<div style="display:inline;" class="suit"></div><strong>&emsp;' + turn.rule.title + '</strong>');
 
             updateCard(card);
         }

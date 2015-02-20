@@ -30,6 +30,9 @@ namespace HouseOfKings.Web.Models
         }
 
         [NotMapped]
+        public Player CurrentTurn { get; set; }
+
+        [NotMapped]
         public List<Player> Players
         {
             get
