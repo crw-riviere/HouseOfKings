@@ -25,9 +25,10 @@
     }
 
     function drawPlayers() {
-        var radius = 120;
-        var players = $('.player');
-        width = $groupCircle.width(), height = $groupCircle.height(),
+        var players = $('.player'),
+        width = $groupCircle.width(),
+        height = $groupCircle.width(),
+        radius = (width / 2) * 0.7,
         angle = 0,
         step = (2 * Math.PI) / players.length;
         players.each(function () {

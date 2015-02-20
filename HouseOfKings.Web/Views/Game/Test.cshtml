@@ -1,16 +1,87 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model HouseOfKings.Web.ViewModels.GameViewModel
 
+@{
+    ViewBag.Title = "Game";
 }
 
 @section scripts{
-    <script>
-        $(function () {
-           
-
-            distributePlayers();
-        });
-    </script>
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/hok.game.js"></script>
 
 }
 
+<style>
+    .group-circle-test {
+        position: relative;
+        padding-bottom:100%;
+    width: 100%;
+    border: 1px solid #efefef;
+    border-radius:50%;
+    -moz-transform:rotate(90deg);
+    -o-transform:rotate(90deg);
+    -ms-transform:rotate(90deg);
+    transform:rotate(90deg);
+
+
+
+    }
+
+    
+   .group-circle-test > * {
+    
+ -moz-transform:rotate(-90deg);
+    -o-transform:rotate(-90deg);
+    -ms-transform:rotate(-90deg);
+    transform:rotate(-90deg);
+
+    }
+</style>
+
+<div class="cntrl cntrl-header">
+    <div class="container-fluid">
+        <p id="audit"></p>
+    </div>
+</div>
+
+<div class="cntrl cntrl-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12">
+
+                <input type="hidden" id="group-name" value="test" />
+                <div class="group-circle-test horizontal-center">
+                    @{Html.RenderPartial("_Card");}
+                    <div class="player"></div>
+                    <div class="player"></div>
+                    <div class="player"></div>
+                    <div class="player"></div>
+                </div>
+            </div>
+
+            <p class="col-xs-6 stats">
+                <span id="card-count" class=""></span>
+                <span class="stats-label">
+                    cards remaining
+                </span>
+            </p>
+            <p class="col-xs-6 stats">
+                <span id="king-count" class=""></span>
+                <span class="stats-label">
+                    kings remaining
+                </span>
+            </p>
+            <div class="col-xs-12">
+
+                <hr />
+                <p id="message" class="text-center"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cntrl cntrl-footer">
+    <div class="container-fluid">
+        <button type="button" class="btn btn-primary btn-lg btn-block action-pick-card">Pick Card</button>
+    </div>
+</div>
