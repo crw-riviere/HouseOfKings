@@ -219,6 +219,7 @@ namespace HouseOfKings.Web.Services
                     gameGroup.CurrentTurn = nextPlayer;
 
                     this.SetTurn(nextPlayer, gameGroup);
+                    this.BroadcastNextTurn(nextPlayer, groupName);
                 }
                 else
                 {
@@ -236,6 +237,13 @@ namespace HouseOfKings.Web.Services
             gameGroup.CurrentTurn = player;
 
             this.Clients.Client(player.ConnectionId).setTurn();
+        }
+
+        private void BroadcastNextTurn(Player player, string groupName)
+        {
+            var playerVM = Mapper.Map<Player, PlayerViewModel>(player);
+
+            this.Clients.Group(groupName).setNextTurn(playerVM);
         }
 
         private void SetGameover(Player player, string groupName)

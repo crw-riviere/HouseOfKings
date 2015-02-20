@@ -1,22 +1,33 @@
 ﻿$(function () {
     var game = $.connection.game; // the generated client-side hub proxy
     $groupCircle = $('.group-circle'),
-    groupName = null,
+    groupName = $('#group-name').val(),
     $btn = $('.action-pick-card');
 
     $btn.loadingButton({ text: 'Waiting for my turn...' });
 
     function init() {
-        groupName = $('#group-name').val();
         game.server.joinGroup(groupName).done(function () {
             setAudit('Joined ' + groupName);
-            $(document).on('click', '.action-pick-card', function () {
-                $btn.text('Picking Card...');
-                game.server.pickCard(groupName).done(function () {
-                    $btn.text('Waiting for my turn...');
+
+            $(document)
+                .on('click', '.action-pick-card', function () {
+                    $btn.text('Picking Card...');
+                    game.server.pickCard(groupName).done(function () {
+                        $btn.text('Waiting for my turn...');
+                    });
+                })
+                .on('click', '#action-replay', function () {
+                    shuffleDeck();
                 });
-            });
         });
+    }
+
+    function shuffleDeck() {
+        setAudit('Shuffled deck');
+        setMessage('');
+        updateCard(null);
+        updateStats({ kingCount: 4, cardCount: 52 });
     }
 
     function drawGroup(groupInfo) {
@@ -101,10 +112,12 @@
     }
 
     function updateCard(card) {
-        var number = null;
-        parseSuit(card.suit);
-        number = parseNumber(card.number);
-        $('.suit').html(number);
+        if (card) {
+            var number = null;
+            parseSuit(card.suit);
+            number = parseNumber(card.number);
+            $('.suit').html(number);
+        }
     }
 
     function addPlayer(player) {
@@ -174,6 +187,14 @@
 
     game.client.setMessage = function (message) {
         setMessage(message);
+    }
+
+    function setNextTurn(player) {
+        setAudit('Waiting for ' + player.name + ' to pick a Card');
+    }
+
+    game.client.setNextTurn = function (player) {
+        setNextTurn(player);
     }
 
     $.connection.hub.connectionSlow(function () {
