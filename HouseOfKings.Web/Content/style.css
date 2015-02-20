@@ -8353,21 +8353,21 @@ button.close {
   width: 100%;
   padding: 5px 10px;
   text-align: center;
+  margin-top: 5px;
 }
 .suit {
   color: black;
   display: inherit;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: 3px;
 }
 .suit.suit-club:after {
   content: '♣';
   display: inherit;
-  margin: 0 2px;
 }
 .suit.suit-spade:after {
   content: '♠';
   display: inherit;
-  margin: 0 2px;
 }
 .suit.suit-heart {
   color: red;
@@ -8375,7 +8375,6 @@ button.close {
 .suit.suit-heart:after {
   content: '♥';
   display: inherit;
-  margin: 0 2px;
 }
 .suit.suit-diamond {
   color: red;
@@ -8383,7 +8382,6 @@ button.close {
 .suit.suit-diamond:after {
   content: '♦';
   display: inherit;
-  margin: 0 2px;
 }
 .card {
   position: absolute;
@@ -8391,12 +8389,13 @@ button.close {
   width: 70px;
   border: 1px solid black;
   border-radius: 5px;
+  box-shadow: 2px 0 10px 0 #545454;
 }
 .card.card-red {
   color: red;
 }
 .card .card-info {
-  margin: 8px 5px;
+  margin: 2px 4px;
   display: block;
   font-size: 14px;
 }
@@ -8416,9 +8415,16 @@ button.close {
 .card .card-info .card-suit {
   display: block;
 }
-.group-circle {
-  position: relative;
+.rule-panel {
   border: 1px solid #efefef;
+  padding: 10px 5px;
+  margin-top: 15px;
+}
+.group-circle {
+  margin: 5px 0;
+  box-shadow: 0 0 10px 1px black;
+  position: relative;
+  border: 2px solid #efefef;
   border-radius: 50%;
   -moz-transform: rotate(90deg);
   -o-transform: rotate(90deg);
@@ -8437,7 +8443,8 @@ button.close {
     width: 350px;
   }
 }
-.group-circle > * {
+.group-circle > div,
+.group-circle span {
   -moz-transform: rotate(-90deg);
   -o-transform: rotate(-90deg);
   -ms-transform: rotate(-90deg);
@@ -8454,6 +8461,7 @@ button.close {
   font-size: 50px;
   position: relative;
   display: inherit;
+  top: 10px;
 }
 .stats {
   text-align: center;
@@ -8477,11 +8485,11 @@ button.close {
 }
 .cntrl.cntrl-content {
   top: 100px;
-  bottom: 55px;
+  bottom: 60px;
   overflow: auto;
 }
 .cntrl.cntrl-footer {
   bottom: 5px;
-  height: 45px;
+  height: 50px;
 }
 /*# sourceMappingURL=style.css.map */

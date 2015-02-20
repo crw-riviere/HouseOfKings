@@ -102,7 +102,6 @@
         parseSuit(card.suit);
         number = parseNumber(card.number);
         $('.suit').html(number);
-        console.log(card);
     }
 
     function addPlayer(player) {
@@ -128,6 +127,15 @@
         $btn.loadingButton({ reset: true });
     }
 
+    function gameover(player) {
+        $('#gameover-message').html(player.name + ' picked the last king.<br/><strong>Game Over</strong>');
+        $('#gameover-modal').modal({ keyboard: false, backdrop: 'static' });
+    }
+
+    game.client.gameover = function (player) {
+        gameover(player);
+    }
+
     function drawTurn(turn) {
         updateStats(turn);
 
@@ -135,7 +143,7 @@
 
         if (card) {
             setAudit(turn.player.name + ' picked ' + '<span class="suit"></span>');
-            setMessage(turn.player.name + ' picked&emsp;' + '<div style="display:inline;" class="suit"></div><strong>&emsp;' + turn.rule.title + '</strong>');
+            setMessage(turn.player.name + ' picked&emsp;' + '<div style="display:inline;" class="suit"></div><br/><em class="small">card rule&nbsp;</em><strong>&emsp;' + turn.rule.title + '</strong>');
 
             updateCard(card);
         }

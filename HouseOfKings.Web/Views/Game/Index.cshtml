@@ -11,6 +11,30 @@
 
 }
 
+<div class="modal fade" id="gameover-modal" tabindex="-1" role="dialog" aria-labelledby="gameover-modal-lbl" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="gameover-modal-lbl">Gameover</h4>
+            </div>
+            <div class="modal-body">
+                <p id="gameover-message" class="text-center"></p>
+            </div>
+            <div class="modal-footer">
+
+            <div class="row">
+                <div class="col-xs-6">
+                    <button type="button" id="action-replay" class="btn btn-primary btn-block">Play Again</button>
+                </div>
+                <div class="col-xs-6">
+                    <button type="button" id="action-leave" class="btn btn-default btn-block">Leave</button>
+
+</div>                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="cntrl cntrl-header">
     <div class="container-fluid">
         <p id="audit"></p>
@@ -42,8 +66,8 @@
             </p>
             <div class="col-xs-12">
 
-                <hr />
-                <p id="message" class="text-center"></p>
+                <p id="message" class="rule-panel text-center"></p>
+
             </div>
         </div>
     </div>
