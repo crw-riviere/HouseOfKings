@@ -1,1 +1,185 @@
-﻿
+﻿<script src="http://cdnjs.cloudflare.com/ajax/libs/pixi.js/2.2.5/pixi.js"></script>
+@*<script>
+
+        var winHeight = 500,
+            winWidth = 500,
+             xCenter = winWidth / 2,
+                    yCenter = winHeight / 2;
+
+        // create an array of assets to load
+        var assetsToLoader = ["../../Images/HouseOfKings.json"];
+
+        // create a new loader
+        loader = new PIXI.AssetLoader(assetsToLoader);
+
+        // use callback
+        loader.onComplete = onAssetsLoaded
+
+        //begin load
+        loader.load();
+
+        // holder to store suits
+        var suitFrames = ["Club.png", "Diamond.png", "Heart.png", "Spade.png"];
+
+        // create an new instance of a pixi stage
+        var stage = new PIXI.Stage(0x66FF99);
+
+        // create a renderer instance
+        var renderer = PIXI.autoDetectRenderer(winWidth, winHeight);
+
+        // add the renderer view element to the DOM
+        document.body.appendChild(renderer.view);
+
+        //var bunnies = [];
+
+        //var bunnyCount = 5,
+        //    radius = (winWidth / 2) * 0.7,
+        //angle = 0,
+        //step = (2 * Math.PI) / bunnyCount;
+
+        //for (var i = 0; i < bunnyCount; i++) {
+        //    var x = Math.round(winWidth / 2 + radius * Math.cos(angle) - 10 / 2);
+        //    var y = Math.round(winHeight / 2 + radius * Math.sin(angle) - 10 / 2);
+        //    createBunny(x, y);
+        //    angle += step;
+        //}
+
+        function onAssetsLoaded() {
+            // create a texture from an image path
+            // add a bunch of suits
+            for (var i = 0; i < 100; i++) {
+                var frameName = suitFrames[i % 4];
+
+                // create an alien using the frame name..
+                var texture = PIXI.Sprite.fromImage('../../Images/' + frameName);
+                var suit = new PIXI.Sprite(texture);
+
+                suit.position.x = Math.random() * 800 - 400;
+                suit.position.y = Math.random() * 600 - 300;
+                suit.anchor.x = 0.5;
+                suit.anchor.y = 0.5;
+            }
+
+            // start animating
+            requestAnimFrame(animate);
+        }
+
+        function createBunny(xPos, yPos) {
+            // create a texture from an image path
+            var texture = PIXI.Texture.fromImage("../../Images/bunny.png");
+
+            // create a new Sprite using the texture
+            var bunny = new PIXI.Sprite(texture);
+            bunny.interactive = true;
+            bunny.buttonMode = true;
+
+            // center the sprites anchor point
+            bunny.anchor.x = 0.5;
+            bunny.anchor.y = 0.5;
+
+            // move the sprite to the center of the screen
+            bunny.position.x = xPos;
+            bunny.position.y = yPos;
+
+            bunnies.push(bunny);
+            stage.addChild(bunny);
+        }
+
+        function animate() {
+            requestAnimFrame(animate);
+
+            // just for fun, let's rotate mr rabbit a little
+            //bunny.rotation += 0.1;
+
+            // render the stage
+            renderer.render(stage);
+        }
+
+        function pickCard(sprite) {
+
+            var bunnyWalk = setInterval(function () {
+                if (sprite.position.x === xCenter && sprite.position.y === yCenter) {
+                    clearInterval(bunnyWalk);
+                }
+                else {
+                    if (sprite.position.x > xCenter) sprite.position.x--;
+                    if (sprite.position.x < xCenter) sprite.position.x++;
+                    if (sprite.position.y > yCenter) sprite.position.y--;
+                    if (sprite.position.y < yCenter) sprite.position.y++;
+                }
+            }, 1);
+        }
+    </script>*@
+
+<script>
+    var assetsToLoader = ["../../Images/SpriteSheet.json"];
+    loader = new PIXI.AssetLoader(assetsToLoader);
+    loader.onComplete = onAssetsLoaded
+    loader.load();
+
+    var suits = [],
+    suitFrames = ["Club.png", "Diamond.png", "Heart.png", "Spade.png"];
+
+    var w = window.innerWidth,
+    h = window.innerHeight - 70;
+    suitCount = w * 0.4;
+
+    var stage = new PIXI.Stage(0xFFFFFF);
+    var renderer = PIXI.autoDetectRenderer(w, h);
+
+    renderer.view.style.position = "absolute";
+    renderer.view.style.top = 0;
+    renderer.view.style.left = 0;
+    renderer.view.style.display = "block";
+    renderer.view.style.width = "100%"
+    renderer.view.style.height = "100%"
+
+    document.querySelector('.body-content').appendChild(renderer.view);
+
+    function onAssetsLoaded() {
+
+        for (var i = 0; i < suitCount; i++) {
+            var frameName = suitFrames[i % 4];
+
+            var suit = PIXI.Sprite.fromFrame(frameName);
+            suit.tint = Math.random() * 0xFFFFFF;
+
+            suit.position.x = Math.random() * w;
+            suit.position.y = Math.random() * h;
+            suit.anchor.x = 0.5;
+            suit.anchor.y = 0.5;
+            suits.push(suit);
+            stage.addChild(suit);
+
+        }
+
+        // start animating
+        requestAnimFrame(animate);
+    }
+    function animate() {
+        for (var i = 0; i < suitCount; i++) {
+            var suit = suits[i];
+            suit.rotation += 0.01;
+
+            suit.position.y++;
+
+            if (suit.position.y > h) {
+                suit.position.y = -10;
+            }
+        }
+
+        renderer.render(stage);
+        requestAnimFrame(animate);
+    }
+</script>
+
+<style>
+    .brand-name-text {
+        position: fixed;
+        top: 50%;
+        font-size: 50px;
+        font-weight: bold;
+    }
+</style>
+
+<div class="brand-name-text">HOUSE OF KINGS</div>
