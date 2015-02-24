@@ -151,13 +151,10 @@
             idleTime++;
             console.log(idleTime);
             if (idleTime > 5) {
-                $.connection.hub.stop();
-                console.log('Player has become idle');
-                clearInterval(idleCounter);
+                window.location = "/";
             }
         }, 60000);
         $btn.button('pick').prop('disabled', false);
-
     }
 
     function setGameover(player) {
@@ -236,6 +233,5 @@
         console.log('Error: ' + error)
     });
 
-   
     $.connection.hub.start().done(init);
 });

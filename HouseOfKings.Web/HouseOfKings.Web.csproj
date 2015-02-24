@@ -346,6 +346,7 @@
       <DependentUpon>style.css</DependentUpon>
     </Content>
     <Content Include="Images\SpriteSheet.json" />
+    <None Include="Properties\PublishProfiles\HouseOfKings.pubxml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Images\bunny.png" />
     <Content Include="Images\HouseOfKings.png" />

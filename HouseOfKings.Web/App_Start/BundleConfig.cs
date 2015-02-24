@@ -4,11 +4,18 @@ namespace HouseOfKings.Web
 {
     public class BundleConfig
     {
+        private const string JQueryCDN = "//code.jquery.com/jquery-2.1.3.min.js";
+        private const string BootstrapCDN = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js";
+        private const string SignalrCDN = "//ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.min.js";
+
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
+            bundles.Add(new ScriptBundle("~/bundles/jquery", JQueryCDN).Include(
                         "~/Scripts/jquery-{version}.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/signalr", SignalrCDN).Include(
+                       "~/Scripts/jquery-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -18,12 +25,9 @@ namespace HouseOfKings.Web
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
+            bundles.Add(new ScriptBundle("~/bundles/bootstrap", BootstrapCDN).Include(
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/riviere").Include(
-                        "~/Scripts/riviere.script.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

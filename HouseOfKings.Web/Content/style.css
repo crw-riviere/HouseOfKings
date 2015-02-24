@@ -8334,9 +8334,6 @@ button.close {
 .fa-medium:before {
   content: "\f23a";
 }
-.body-content {
-  padding-top: 60px;
-}
 .absolute-center {
   margin: auto;
   position: absolute;
@@ -8483,11 +8480,11 @@ button.close {
   right: 0;
 }
 .cntrl.cntrl-header {
-  top: 55px;
+  top: 0;
   height: 30px;
 }
 .cntrl.cntrl-content {
-  top: 100px;
+  top: 40px;
   bottom: 60px;
   overflow: auto;
 }
