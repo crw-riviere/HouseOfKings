@@ -6,7 +6,9 @@
         }, options);
 
         if (!settings.reset) {
-            this.attr('data-loading-text', '&emsp;' + settings.text)
+            this.button('reset');
+
+            this.attr('data-loading-text', '&emsp;' + settings.text);
             this.button('loading');
         }
         else {

@@ -11,6 +11,25 @@
 
 }
 
+<div class="modal fade" id="rule-modal" tabindex="-1" role="dialog" aria-labelledby="rule-modal-lbl" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <p id="rule-desc" class="text-center"></p>
+            </div>
+            <div class="modal-footer">
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <button type="button" id="action-replay" data-dismiss="modal" class="btn btn-primary btn-block">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="gameover-modal" tabindex="-1" role="dialog" aria-labelledby="gameover-modal-lbl" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -64,14 +83,16 @@
             </p>
             <div class="col-xs-12">
 
-                <p id="message" class="rule-panel text-center"></p>
+                <div id="message" class="rule-panel">
+                  
+
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="cntrl cntrl-footer">
-    <div class="container-fluid">
-        <button type="button" class="btn btn-primary btn-lg btn-block action-pick-card">Pick Card</button>
+    <div class="cntrl cntrl-footer">
+        <div class="container-fluid">
+            <button type="button" class="btn btn-primary btn-lg btn-block action-pick-card" data-pick-text="Pick Card" data-waiting-text="Waiting for my turn..." data-picking-text="Picking card...">Pick Card</button>
+        </div>
     </div>
-</div>

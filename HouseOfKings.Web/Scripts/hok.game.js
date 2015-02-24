@@ -4,7 +4,7 @@
     groupName = $('#group-name').val(),
     $btn = $('.action-pick-card');
 
-    $btn.loadingButton({ text: 'Waiting for my turn...' });
+    $btn.button('waiting').prop('disabled', true);
 
     function init() {
         game.server.joinGroup(groupName).done(function () {
@@ -12,10 +12,9 @@
 
             $(document)
                 .on('click', '.action-pick-card', function () {
-                    $btn.text('Picking Card...');
-                    game.server.pickCard(groupName).done(function () {
-                        $btn.text('Waiting for my turn...');
-                    });
+                    $btn.button('waiting').prop('disabled', true);
+
+                    game.server.pickCard(groupName);
                 })
                 .on('click', '#action-replay', function () {
                     shuffleDeck();
@@ -140,7 +139,7 @@
     }
 
     game.client.setTurn = function () {
-        $btn.loadingButton({ reset: true });
+        $btn.button('pick').prop('disabled', false);
     }
 
     function setGameover(player) {
@@ -159,7 +158,7 @@
 
         if (card) {
             setAudit(turn.player.name + ' picked ' + '<span class="suit"></span>');
-            setMessage(turn.player.name + ' picked&emsp;' + '<div style="display:inline;" class="suit"></div><br/><em class="small">card rule&nbsp;</em><strong>&emsp;' + turn.rule.title + '</strong>');
+            setMessage('<p class="text-center">' + turn.player.name + ' picked&emsp;' + '<span style="display:inline;" class="suit"></span><br/><em class="small">card rule&nbsp;</em><strong>&emsp;' + turn.rule.title + '</strong></p>');
 
             updateCard(card);
         }

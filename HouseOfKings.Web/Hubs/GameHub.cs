@@ -14,7 +14,7 @@ namespace HouseOfKings.Web.Hubs
 
         public async Task PickCard(string groupName)
         {
-            await this.GameService.PickCard(groupName);
+            await this.GameService.PickCard(Context.ConnectionId, groupName);
         }
 
         public async Task JoinGroup(string groupName)

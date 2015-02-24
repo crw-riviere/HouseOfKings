@@ -187,13 +187,13 @@ namespace HouseOfKings.Web.Services
             return null;
         }
 
-        public async Task PickCard(string groupName)
+        public async Task PickCard(string connectionId, string groupName)
         {
             try
             {
                 var gameGroup = this.GetGameGroup(groupName);
 
-                if (!gameGroup.CurrentTurn.Id.Equals(CurrentPlayer.Id))
+                if (!gameGroup.CurrentTurn.ConnectionId.Equals(connectionId))
                 {
                     throw new Exception("Unauthorized Turn");
                 }
@@ -224,8 +224,8 @@ namespace HouseOfKings.Web.Services
 
                     gameGroup.CurrentTurn = nextPlayer;
 
-                    this.SetTurn(nextPlayer, gameGroup);
                     this.BroadcastNextTurn(nextPlayer, groupName);
+                    this.SetTurn(nextPlayer, gameGroup);
                 }
                 else
                 {
@@ -234,7 +234,7 @@ namespace HouseOfKings.Web.Services
             }
             catch (Exception ex)
             {
-                var i = 0;
+                this.SetAudit(connectionId, ex.Message);
             }
         }
 
@@ -243,6 +243,11 @@ namespace HouseOfKings.Web.Services
             gameGroup.CurrentTurn = player;
 
             this.Clients.Client(player.ConnectionId).setTurn();
+        }
+
+        private void SetAudit(string connectionId, string message)
+        {
+            this.Clients.Client(connectionId).setAudit(message);
         }
 
         private void BroadcastNextTurn(Player player, string groupName)
