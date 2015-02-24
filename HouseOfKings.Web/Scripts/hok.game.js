@@ -1,8 +1,11 @@
 ﻿$(function () {
-    var game = $.connection.game; // the generated client-side hub proxy
+    var game = $.connection.game,
+        idleTime = 0,
     $groupCircle = $('.group-circle'),
     groupName = $('#group-name').val(),
     $btn = $('.action-pick-card');
+
+    var idleCounter;
 
     $btn.button('waiting').prop('disabled', true);
 
@@ -13,7 +16,8 @@
             $(document)
                 .on('click', '.action-pick-card', function () {
                     $btn.button('waiting').prop('disabled', true);
-
+                    idleTime = 0;
+                    clearInterval(idleCounter);
                     game.server.pickCard(groupName);
                 })
                 .on('click', '#action-replay', function () {
@@ -139,7 +143,21 @@
     }
 
     game.client.setTurn = function () {
+        setTurn();
+    }
+
+    function setTurn() {
+        idleCounter = setInterval(function () {
+            idleTime++;
+            console.log(idleTime);
+            if (idleTime > 5) {
+                $.connection.hub.stop();
+                console.log('Player has become idle');
+                clearInterval(idleCounter);
+            }
+        }, 60000);
         $btn.button('pick').prop('disabled', false);
+
     }
 
     function setGameover(player) {
@@ -207,10 +225,17 @@
     $.connection.hub.disconnected(function () {
         setAudit('Attempting to reconnect to server...');
         setTimeout(function () {
-            $.connection.hub.start();
+            console.log('Attempting to reconnect to server...');
+            $.connection.hub.start().done(function () {
+                setAudit('Connected to server...');
+            });
         }, 5000);
     });
 
-    // Start the connection
+    $.connection.hub.error(function (error) {
+        console.log('Error: ' + error)
+    });
+
+   
     $.connection.hub.start().done(init);
 });
