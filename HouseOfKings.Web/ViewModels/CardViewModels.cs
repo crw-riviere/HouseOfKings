@@ -11,39 +11,39 @@ namespace HouseOfKings.Web.ViewModels
             this.Rule = new RuleViewModel();
         }
 
-        [JsonProperty("fin")]
+        [JsonProperty("f")]
         public bool GameOver { get; set; }
 
-        [JsonProperty("cardCount")]
-        public int CardCount { get; set; }
+        [JsonProperty("cc")]
+        public sbyte CardCount { get; set; }
 
-        [JsonProperty("kingCount")]
-        public int KingCount { get; set; }
+        [JsonProperty("kc")]
+        public sbyte KingCount { get; set; }
 
-        [JsonProperty("player")]
+        [JsonProperty("usr")]
         public PlayerViewModel CurrentPlayer { get; set; }
 
-        [JsonProperty("card")]
+        [JsonProperty("crd")]
         public CardViewModel Card { get; set; }
 
-        [JsonProperty("rule")]
+        [JsonProperty("rul")]
         public RuleViewModel Rule { get; set; }
     }
 
     public class CardViewModel
     {
-        [JsonProperty("number")]
+        [JsonProperty("n")]
         [Range(1, 13)]
-        public int Number { get; set; }
+        public sbyte Number { get; set; }
 
-        [JsonProperty("suit")]
+        [JsonProperty("s")]
         [Required]
         public Suit Suit { get; set; }
     }
 
     public class RuleViewModel
     {
-        [JsonProperty("title")]
+        [JsonProperty("t")]
         public string Title { get; set; }
     }
 }

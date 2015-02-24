@@ -40,26 +40,26 @@ namespace HouseOfKings.Web.Models
         {
             foreach (Suit suit in Enum.GetValues(typeof(Suit)))
             {
-                foreach (int i in Enumerable.Range(1, 13))
+                foreach (sbyte i in Enumerable.Range(1, 13))
                 {
                     yield return new Card() { Suit = suit, Number = i };
                 }
             }
         }
 
-        public int CardCount
+        public sbyte CardCount
         {
             get
             {
-                return this.Cards.Count;
+                return Convert.ToSByte(this.Cards.Count);
             }
         }
 
-        public int KingCount
+        public sbyte KingCount
         {
             get
             {
-                return this.Cards.Count(x => x.Number == 13);
+                return Convert.ToSByte(this.Cards.Count(x => x.Number == 13));
             }
         }
 
@@ -82,7 +82,7 @@ namespace HouseOfKings.Web.Models
     public class Card
     {
         [Range(1, 13)]
-        public int Number { get; set; }
+        public sbyte Number { get; set; }
 
         [Required]
         public Suit Suit { get; set; }

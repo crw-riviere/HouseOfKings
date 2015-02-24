@@ -30,15 +30,15 @@
         setAudit('Shuffled deck');
         setMessage('');
         updateCard(null);
-        updateStats({ kingCount: 4, cardCount: 52 });
+        updateStats({ kc: 4, cc: 52 });
     }
 
     function drawGroup(groupInfo) {
-        groupInfo.players.forEach(function (player) {
+        groupInfo.usrs.forEach(function (player) {
             addPlayer(player);
         });
         drawPlayers();
-        drawTurn(groupInfo.turn);
+        drawTurn(groupInfo.trn);
     }
 
     function drawPlayers() {
@@ -110,22 +110,22 @@
     }
 
     function updateStats(turn) {
-        $('#card-count').html(turn.cardCount);
-        $('#king-count').html(turn.kingCount);
+        $('#card-count').html(turn.cc);
+        $('#king-count').html(turn.kc);
     }
 
     function updateCard(card) {
         if (card) {
             var number = null;
-            parseSuit(card.suit);
-            number = parseNumber(card.number);
+            parseSuit(card.s);
+            number = parseNumber(card.n);
             $('.suit').html(number);
         }
     }
 
     function addPlayer(player) {
-        game.client.setAudit(player.name + ' joined the game');
-        $groupCircle.append('<div class="player" data-player-id="' + player.id + '" data-name="' + player.name + '"></div>');
+        game.client.setAudit(player.n + ' joined the game');
+        $groupCircle.append('<div class="player" data-player-id="' + player.i + '" data-name="' + player.n + '"></div>');
     }
 
     game.client.drawGroup = function (groupInfo) {
@@ -138,8 +138,8 @@
     }
 
     game.client.removePlayer = function (player) {
-        setAudit(player.name + ' left the group');
-        $groupCircle.find("[data-player-id='" + player.id + "']").remove();
+        setAudit(player.n + ' left the group');
+        $groupCircle.find("[data-player-id='" + player.i + "']").remove();
     }
 
     game.client.setTurn = function () {
@@ -158,7 +158,7 @@
     }
 
     function setGameover(player) {
-        $('#gameover-message').html(player.name + ' picked the last King<br/><br/><strong>Game Over</strong>');
+        $('#gameover-message').html(player.n + ' picked the last King<br/><br/><strong>Game Over</strong>');
         $('#gameover-modal').modal({ keyboard: false, backdrop: 'static' });
     }
 
@@ -169,17 +169,17 @@
     function drawTurn(turn) {
         updateStats(turn);
 
-        var card = turn.card;
+        var card = turn.crd;
 
         if (card) {
-            setAudit(turn.player.name + ' picked ' + '<span class="suit"></span>');
-            setMessage('<p class="text-center">' + turn.player.name + ' picked&emsp;' + '<span style="display:inline;" class="suit"></span><br/><em class="small">card rule&nbsp;</em><strong>&emsp;' + turn.rule.title + '</strong></p>');
+            setAudit(turn.usr.n + ' picked ' + '<span class="suit"></span>');
+            setMessage('<p class="text-center">' + turn.usr.n + ' picked&emsp;' + '<span style="display:inline;" class="suit"></span><br/><em class="small">card rule&nbsp;</em><strong>&emsp;' + turn.rul.t + '</strong></p>');
 
             updateCard(card);
         }
 
-        if (turn.fin) {
-            setGameover(turn.player);
+        if (turn.f) {
+            setGameover(turn.usr);
         }
     }
 
@@ -204,7 +204,7 @@
     }
 
     function setNextTurn(player) {
-        setAudit('Waiting for ' + player.name + ' to pick a Card');
+        setAudit('Waiting for ' + player.n + ' to pick a Card');
     }
 
     game.client.setNextTurn = function (player) {
