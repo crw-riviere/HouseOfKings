@@ -8382,8 +8382,8 @@ button.close {
 }
 .card {
   position: absolute;
-  height: 100px;
-  width: 70px;
+  height: 80px;
+  width: 60px;
   border: 1px solid black;
   border-radius: 5px;
   box-shadow: 2px 0 10px 0 #545454;
@@ -8394,7 +8394,7 @@ button.close {
 .card .card-info {
   margin: 2px 4px;
   display: block;
-  font-size: 14px;
+  font-size: 10px;
 }
 .card .card-info:last-child {
   position: absolute;
@@ -8418,7 +8418,7 @@ button.close {
   padding: 10px 5px;
 }
 .group-circle {
-  margin: 8px 0;
+  margin-top: 10px;
   box-shadow: 0 0 10px 1px black;
   position: relative;
   border: 2px solid #efefef;
@@ -8430,8 +8430,8 @@ button.close {
 }
 @media (max-width: 767px) {
   .group-circle {
-    padding-bottom: 100%;
-    width: 100%;
+    padding-bottom: 70%;
+    width: 70%;
   }
 }
 @media (min-width: 768px) {
@@ -8454,7 +8454,7 @@ button.close {
 .player:before {
   position: relative;
   display: block;
-  font-size: 50px;
+  font-size: 30px;
   font-family: FontAwesome;
   content: "\f007";
 }
