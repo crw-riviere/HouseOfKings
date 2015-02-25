@@ -1,19 +1,241 @@
 ﻿@model HouseOfKings.Web.ViewModels.GameViewModel
 
-@{
-    ViewBag.Title = "Game";
-}
-
 @section scripts{
-    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
-    <script src="~/signalr/hubs"></script>
-    <script src="~/Scripts/hok.game.js"></script>
-
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/pixi.js/2.2.5/pixi.js"></script>
+<script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+<script src="~/signalr/hubs"></script>
+<script src="~/Scripts/hok.game.js"></script>
     <script>
-        $(function () {
-            $.getJSON("/api/rule/1/", function (data) {
-                console.log(data);
+        var assetsToLoader = ["../../Images/SpriteSheet.json"];
+        loader = new PIXI.AssetLoader(assetsToLoader);
+        loader.onComplete = onAssetsLoaded
+        loader.load();
+
+        var suits = [],
+        suitFrames = ["Club.png", "Diamond.png", "Spade.png", "Heart.png"];
+
+        var w = h = $('.cntrl-content').height() * .6,
+        r = (w / 2) * .9,
+        suitCount = r * .2;
+
+        var players = {},
+         card;
+
+        var stage = new PIXI.Stage(0xFFFFFF);
+        var renderer = PIXI.autoDetectRenderer(w, h);
+
+        renderer.view.style.margin = "0 auto";
+        //renderer.view.style.top = 0;
+        //renderer.view.style.left = 0;
+        renderer.view.style.display = "block";
+        ////renderer.view.style.width = "100%"
+        ////renderer.view.style.height = "100%"
+
+        $('.cntrl-content').prepend(renderer.view);
+
+        function onAssetsLoaded() {
+            var angle = 0,
+            step = (2 * Math.PI) / suitCount;
+
+            for (var i = 0; i < suitCount; i++) {
+                var frameName = suitFrames[i % 4];
+
+                var suit = PIXI.Sprite.fromFrame(frameName);
+                suit.anchor.x = 0.5;
+                suit.anchor.y = 0.5;
+
+                suit.position.x = Math.round(w / 2 + r * Math.cos(angle) - 10 / 2);
+                suit.position.y = Math.round(h / 2 + r * Math.sin(angle) - 10 / 2);
+                angle += step;
+
+                suits.push(suit);
+                stage.addChild(suit);
+            }
+
+            requestAnimFrame(animate);
+        }
+        function animate() {
+            for (var i = 0; i < suitCount; i++) {
+                var suit = suits[i];
+                suit.rotation += 0.003;
+
+            }
+
+            renderer.render(stage);
+            requestAnimFrame(animate);
+        }
+
+        function drawCard(number, suit) {
+
+            var cardHeight = 90,
+              cardWidth = 60,
+            textFill = 'black';
+
+            number = parseCardNumber(number);
+
+            switch (suit) {
+                case 0: {
+                    suit = '♣';
+                    break;
+                }
+                case 1: {
+                    suit = '♦';
+                    textFill = 'red';
+                    break;
+                }
+                case 2: {
+                    suit = '♥';
+                    textFill = 'red';
+                    break;
+                }
+                case 3: {
+                    suit = '♠';
+                    break;
+
+                }
+                default: {
+                    break;
+                }
+            }
+
+            var textStyle = { font: '12px Arial', fill: textFill, align: "center", stroke: '#FFFFFF', strokeThickness: 1 };
+
+            if (!card) {
+                card = {};
+                var cardContainer = new PIXI.DisplayObjectContainer();
+                cardContainer.position.x = w / 2 - cardWidth / 2;
+                cardContainer.position.y = h / 2 - cardHeight / 2;
+
+                var cardLayout = new PIXI.Graphics();
+                cardContainer.addChild(cardLayout);
+                cardLayout.lineStyle(1, 'black', 1);
+                cardLayout.drawRoundedRect(0, 0, cardWidth, cardHeight, 5);
+                card.layout = cardLayout;
+
+                card.numbers = [];
+                var topNumber = new PIXI.Text(number, textStyle);
+                var bottomNumber = new PIXI.Text(number, textStyle);
+                cardContainer.addChild(topNumber);
+                cardContainer.addChild(bottomNumber);
+                card.numbers.push(topNumber);
+                card.numbers.push(bottomNumber);
+                bottomNumber.position.y = cardHeight;
+
+                card.suits = [];
+                var topSuit = new PIXI.Text(suit, textStyle);
+                var bottomSuit = new PIXI.Text(suit, textStyle);
+                card.suits.push(topSuit);
+                card.suits.push(bottomSuit);
+                cardContainer.addChild(topSuit);
+                cardContainer.addChild(bottomSuit);
+                topSuit.position.y = 10;
+                topSuit.position.x = topNumber.position.x = 2;
+                bottomSuit.rotation = bottomNumber.rotation = 3.14;
+                bottomSuit.position.x = bottomNumber.position.x = cardWidth - 2;
+                bottomSuit.position.y = cardHeight - 10;
+
+                stage.addChild(cardContainer);
+                card.container = cardContainer;
+
+            } else {
+                $.each(card.numbers, function () {
+                    this.setText(number);
+                    this.setStyle(textStyle);
+                });
+                $.each(card.suits, function () {
+                    this.setText(suit);
+                    this.setStyle(textStyle);
+
+                });
+            }
+        }
+
+        function parseCardNumber(n) {
+            switch (n) {
+                case 1: {
+                    return 'A';
+                }
+                case 11: {
+                    return 'J';
+                } case 12: {
+                    return 'Q';
+                }
+                case 13: {
+                    return 'K';
+                }
+                default: {
+                    return n;
+                }
+            }
+        }
+
+        function addPlayer(id, username) {
+            var playerContainer = new PIXI.DisplayObjectContainer();
+            var player = PIXI.Sprite.fromFrame('King.png');
+            player.anchor.x = 0.5;
+            player.anchor.y = 0.5;
+            playerContainer.addChild(player);
+
+            var playerName = new PIXI.Text(username, { font: "bold 12px Open Sans", fill: "black", align: "center", stroke: "#FFFFFF", strokeThickness: 1 });
+            playerName.anchor.x = 0.5;
+            playerName.anchor.y = 0.5;
+            playerName.position.x = 0;
+            playerName.position.y = 30;
+            playerContainer.addChild(playerName);
+
+            players[id] = playerContainer;
+
+            var angle = 0,
+            step = (2 * Math.PI) / players.length;
+
+            $.each(players, function (i, playerContainer) {
+                playerContainer.position.x = Math.round(w / 2 + r * Math.cos(angle) * 0.8 - 16 / 2);
+                playerContainer.position.y = Math.round(h / 2 + r * Math.sin(angle) * 0.8 - 16 / 2);
+                angle += step;
             });
-        });
+
+            stage.addChild(playerContainer);
+
+        }
+
+        function removePlayer(id) {
+            var playerContainer = players[id];
+            playerContainer.removeChildren();
+            stage.removeChild(playerContainer);
+            delete players[id];
+        }
     </script>
 }
+
+<input type="hidden" id="group-name" value="@Model.GroupName" />
+<div class="cntrl cntrl-header">
+    <div class="container-fluid">
+        <p id="audit"></p>
+    </div>
+</div>
+
+<div class="cntrl cntrl-content">
+    <p class="col-xs-6 stats">
+        <span id="card-count" class=""></span>
+        <span class="stats-label">
+            cards remaining
+        </span>
+    </p>
+    <p class="col-xs-6 stats">
+        <span id="king-count" class=""></span>
+        <span class="stats-label">
+            kings remaining
+        </span>
+    </p>
+    <div class="col-xs-12">
+
+        <div id="message" class="rule-panel">
+        </div>
+    </div>
+</div>
+
+<div class="cntrl cntrl-footer">
+    <div class="container-fluid">
+        <button type="button" class="btn btn-primary btn-lg btn-block action-pick-card" data-pick-text="Pick Card" data-waiting-text="Waiting for my turn..." data-picking-text="Picking card...">Pick Card</button>
+    </div>
+</div>

@@ -16,7 +16,7 @@ namespace HouseOfKings.Web.Controllers
 
         public ActionResult Test()
         {
-            return View();
+            return View(new GameViewModel() { GroupName = "Test" });
         }
     }
 }
