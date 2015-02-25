@@ -110,13 +110,13 @@
     }
 
     function setTurn() {
-        //idleCounter = setInterval(function () {
-        //    idleTime++;
-        //    console.log(idleTime);
-        //    if (idleTime > 5) {
-        //        window.location = "/";
-        //    }
-        //}, 60000);
+        idleCounter = setInterval(function () {
+            idleTime++;
+            console.log(idleTime);
+            if (idleTime > 5) {
+                window.location = "/";
+            }
+        }, 60000);
         $btn.button('pick').prop('disabled', false);
     }
 

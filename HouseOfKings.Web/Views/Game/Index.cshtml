@@ -16,7 +16,7 @@
 
         var w = h = $('.cntrl-content').height() * .6,
         r = (w / 2) * .9,
-        suitCount = r * .2;
+        suitCount = r * .5;
 
         var players = {},
          card;
@@ -24,9 +24,8 @@
         var stage = new PIXI.Stage(0xFFFFFF);
         var renderer = PIXI.autoDetectRenderer(w, h);
 
-        renderer.view.style.margin = "0 auto";       
+        renderer.view.style.margin = "0 auto";
         renderer.view.style.display = "block";
-      
 
         $('.cntrl-content').prepend(renderer.view);
 
@@ -40,9 +39,11 @@
                 var suit = PIXI.Sprite.fromFrame(frameName);
                 suit.anchor.x = 0.5;
                 suit.anchor.y = 0.5;
+                suit.scale.x = 0.5;
+                suit.scale.y = 0.5;
 
-                suit.position.x = Math.round(w / 2 + r * Math.cos(angle) - 10 / 2);
-                suit.position.y = Math.round(h / 2 + r * Math.sin(angle) - 10 / 2);
+                suit.position.x = Math.round(w / 2 + r * Math.cos(angle) - 8 / 2);
+                suit.position.y = Math.round(h / 2 + r * Math.sin(angle) - 8 / 2);
                 angle += step;
 
                 suits.push(suit);
@@ -181,7 +182,6 @@
             playerContainer.addChild(playerName);
 
             players[id] = playerContainer;
-
 
             var angle = 0,
             step = (2 * Math.PI) / Object.keys(players).length;
