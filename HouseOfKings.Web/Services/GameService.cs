@@ -21,6 +21,17 @@ namespace HouseOfKings.Web.Services
 
         private ConcurrentDictionary<string, GameGroup> gameGroups;
 
+        public GameService()
+        {
+        }
+
+        public GameService(IHubConnectionContext<dynamic> clients)
+        {
+            this.Clients = clients;
+        }
+
+        private IHubConnectionContext<dynamic> Clients { get; set; }
+
         private ConcurrentDictionary<string, GameGroup> GameGroups
         {
             get
@@ -85,7 +96,8 @@ namespace HouseOfKings.Web.Services
             List<PlayerViewModel> players = (from p in gameGroup.Players
                                              select new PlayerViewModel() { Id = p.Id, Username = p.Username }).ToList();
 
-            this.Clients.Client(connectionId).drawGroup(new GameGroupInfoViewModel() { Players = players, CurrentTurn = await this.GetTurnInfo(groupName) });
+            TurnViewModel turnVM = await this.GetTurnInfo(gameGroup);
+            this.Clients.Client(connectionId).setGameGroupInfo(new GameGroupInfoViewModel() { Players = players, CurrentTurn = turnVM });
 
             if (gameGroup.Players.Count <= 1)
             {
@@ -131,17 +143,6 @@ namespace HouseOfKings.Web.Services
             return gameGroup;
         }
 
-        public GameService()
-        {
-        }
-
-        public GameService(IHubConnectionContext<dynamic> clients)
-        {
-            this.Clients = clients;
-        }
-
-        private IHubConnectionContext<dynamic> Clients { get; set; }
-
         private static Player GetNextTurn(string currentPlayerId, List<Player> players)
         {
             var currentTurnPlayer = players.FirstOrDefault(x => x.Id.Equals(currentPlayerId));
@@ -154,10 +155,8 @@ namespace HouseOfKings.Web.Services
             return players[nextIndex];
         }
 
-        private async Task<TurnViewModel> GetTurnInfo(string groupName)
+        private async Task<TurnViewModel> GetTurnInfo(GameGroup gameGroup)
         {
-            var gameGroup = this.GetGameGroup(groupName);
-
             if (gameGroup != null)
             {
                 var deck = gameGroup.Deck;
@@ -265,7 +264,7 @@ namespace HouseOfKings.Web.Services
 
         private void BroadcastTurn(string groupName, TurnViewModel turnVM)
         {
-            Clients.Group(groupName).drawTurn(turnVM);
+            Clients.Group(groupName).updateTurnInfo(turnVM);
         }
     }
 }
