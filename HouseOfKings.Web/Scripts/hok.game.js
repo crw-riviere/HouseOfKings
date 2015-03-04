@@ -131,8 +131,10 @@
         var card = turn.crd;
 
         if (card) {
+            var number = parseCardNumber(card.n);
+            var suit = parseCardSuit(card.s);
             setAudit(turn.usr.n + ' picked ' + '<span class="suit"></span>');
-            setMessage('<p class="text-center">' + turn.usr.n + ' picked&emsp;' + '<span style="display:inline;" class="suit"></span><br/><em class="small">card rule&nbsp;</em><strong>&emsp;' + turn.rul.t + '</strong></p>');
+            setMessage('<p class="text-center">' + turn.usr.n + ' picked&emsp;<span>'+number +'&nbsp;</span><span>'+suit+'</span><br/><em class="small">card rule&nbsp;</em><strong>&emsp;' + turn.rul.t + '</strong></p>');
 
             drawCard(card.n, card.s);
         }

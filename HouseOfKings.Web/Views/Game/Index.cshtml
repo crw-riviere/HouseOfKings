@@ -126,11 +126,11 @@
                 card.suits.push(bottomSuit);
                 cardContainer.addChild(topSuit);
                 cardContainer.addChild(bottomSuit);
-                topSuit.position.y = 10;
+                topSuit.position.y = 15;
                 topSuit.position.x = topNumber.position.x = 2;
                 bottomSuit.rotation = bottomNumber.rotation = 3.14;
                 bottomSuit.position.x = bottomNumber.position.x = cardWidth - 2;
-                bottomSuit.position.y = cardHeight - 10;
+                bottomSuit.position.y = cardHeight - 15;
 
                 stage.addChild(cardContainer);
                 card.container = cardContainer;
@@ -163,6 +163,27 @@
                 }
                 default: {
                     return n;
+                }
+            }
+        }
+
+        function parseCardSuit(s) {
+            switch (s) {
+                case 0: {
+                    return  '♣';
+                }
+                case 1: {
+                    return '♦';
+                }
+                case 2: {
+                    return '♥';
+                }
+                case 3: {
+                    return '♠';
+
+                }
+                default: {
+                    return s;
                 }
             }
         }
